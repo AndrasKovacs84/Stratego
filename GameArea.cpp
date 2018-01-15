@@ -270,3 +270,115 @@ int GameArea::getNextEmptyDiscardPileIndex()
         }
     }
 }
+
+int GameArea::getSize(ClickedArea areaToCheck)
+{
+    switch (areaToCheck)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea.size();
+    case ClickedArea::SIDE_AREA:
+        return cardArea.size();
+    case ClickedArea::DISCARD_PILE:
+        return discardPile.size();
+    case ClickedArea::UI:
+        break;
+    default:
+        return 0;
+        break;
+    }
+}
+
+int GameArea::getSideAreaSize()
+{
+    return cardArea.size();
+}
+
+int GameArea::getDiscardPileSize()
+{
+    return discardPile.size();
+}
+
+int GameArea::getXofFieldWithIdx(const int & index, ClickedArea area)
+{
+    switch (area)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea[index]->getX();
+        break;
+    case ClickedArea::SIDE_AREA:
+        return sideArea[index]->getX();
+        break;
+    case ClickedArea::DISCARD_PILE:
+        return discardPile[index]->getX();
+        break;
+    default:
+        return 0;
+    }
+    return gameArea[index]->getX();
+}
+
+int GameArea::getYofFieldWithIdx(const int & index, ClickedArea area)
+{
+    switch (area)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea[index]->getY();
+    case ClickedArea::SIDE_AREA:
+        return sideArea[index]->getY();
+    case ClickedArea::DISCARD_PILE:
+        break;
+    default:
+        return 0;
+    }
+}
+
+int GameArea::getXofSideFieldWithIdx(const int & index)
+{
+    return cardArea[index]->getX();
+}
+
+int GameArea::getYofSideFieldWithIdx(const int & index, ClickedArea area)
+{
+    switch (area)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea[index]->getY();
+    case ClickedArea::SIDE_AREA:
+        return sideArea[index]->getY();
+    case ClickedArea::DISCARD_PILE:
+        break;
+    default:
+        return 0;
+    }
+}
+
+bool GameArea::isFieldHighlighted(const int & index)
+{
+    return gameArea[index]->getIsHighlighted(index);
+}
+
+bool GameArea::isSideFieldHighlighted(const int & index)
+{
+    return cardArea[index]->getIsHighlighted();
+}
+
+const std::unique_ptr<Card>& GameArea::getContentOfIdx(const int & index, ClickedArea area)
+{
+    switch (area)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea[index]->getContent();
+    case ClickedArea::SIDE_AREA:
+        return sideArea[index]->getContent();
+    case ClickedArea::DISCARD_PILE:
+        return discardPile[index]->getContent();
+    default:
+        return 0;
+    }
+}
+
+const std::unique_ptr<Card>& GameArea::getSideContentOfIdx(const int & index)
+{
+    return cardArea[index]->getContent();
+}

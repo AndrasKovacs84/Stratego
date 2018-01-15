@@ -27,6 +27,19 @@ public:
     void resolveBattle();
     int getNextEmptyDiscardPileIndex();
 
+    //New getters
+    int getSize(ClickedArea areaToCheck);
+    //int getSideAreaSize();
+    //int getDiscardPileSize();
+    int getXofFieldWithIdx(const int& index, ClickedArea area);
+    int getYofFieldWithIdx(const int& index, ClickedArea area);
+    //int getXofSideFieldWithIdx(const int& index);
+    //int getYofSideFieldWithIdx(const int& index, ClickedArea area);
+    bool isFieldHighlighted(const int& index);
+    bool isSideFieldHighlighted(const int& index);
+    const std::unique_ptr<Card>& getContentOfIdx(const int& index, ClickedArea area);
+    const std::unique_ptr<Card>& getSideContentOfIdx(const int& index);
+
 private:
 
     std::vector<std::unique_ptr<Field>> gameArea;

@@ -31,7 +31,7 @@ void Game::start() {
 
         handlePlayerClicks();
         if(!source.isEmpty() && !destination.isEmpty()){
-            moveCard();
+            gameArea->moveCard(source, destination);
         }
 
         display->renderPresent();
@@ -48,7 +48,7 @@ void Game::delegateAccordingToGameState() {
     if(gameState == GameState::BLUE_INIT_START ||
        gameState == GameState::RED_INIT_START) {
         populateCardArea();
-        initCardPositions();
+        gameArea->initCardPositions();
     } else if(gameState == GameState::BLUE_INIT_IN_PROGRESS ||
               gameState == GameState::RED_INIT_IN_PROGRESS) {
         handleInitInProgress();
@@ -160,29 +160,30 @@ void Game::populateCardArea() {
 
 Game::Game() {
     gameState = GameState::BLUE_INIT_START;
-    initGameArea();
-    initCardArea();
+    gameArea->initGameArea();
+    gameArea->initCardArea();
+    gameArea->initDiscardPile();
     initButtons();
-    initDiscardPile();
 }
 
 void Game::renderGameArea() {
-    for (int i = 0; i < gameArea.size(); ++i) {
-        int fieldX = gameArea[i]->getX();
-        int fieldY = gameArea[i]->getY();
-        bool highlighted = gameArea[i]->getIsHighlighted();
-        if(gameArea[i]->getContent() == nullptr) {
+    int boardSize = gameArea->getSize(ClickedArea::GAME_AREA);
+    for (int i = 0; i < boardSize; ++i) {
+        int fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::GAME_AREA);
+        int fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::SIDE_AREA);
+        bool highlighted = gameArea->isFieldHighlighted(i);
+        if(gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA) == nullptr) {
             display->renderField(fieldX, fieldY, highlighted);
         } else {
-            int cardX = gameArea[i]->getContent()->getNextXPos(fieldX);
-            int cardY = gameArea[i]->getContent()->getNextYPos(fieldY);
-            int cardW = gameArea[i]->getContent()->getNextFlipAnimFrameWidth();
-            if(gameArea[i]->getContent()->getIsFaceDown()){
-                Color color = gameArea[i]->getContent()->getColor();
+            int cardX = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextXPos(fieldX);
+            int cardY = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextYPos(fieldY);
+            int cardW = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextFlipAnimFrameWidth();
+            if(gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getIsFaceDown()){
+                Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
                 display->renderField(fieldX, fieldY, highlighted, color, cardX, cardY, cardW);
             } else {
-                Color color = gameArea[i]->getContent()->getColor();
-                CardType type = gameArea[i]->getContent()->getType();
+                Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
+                CardType type = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getType();
                 display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
             }
         }
@@ -190,18 +191,19 @@ void Game::renderGameArea() {
 }
 
 void Game::renderCardArea() {
-    for (int i = 0; i < cardArea.size(); ++i) {
-        int fieldX = cardArea[i]->getX();
-        int fieldY = cardArea[i]->getY();
-        bool highlighted = cardArea[i]->getIsHighlighted();
-        if(cardArea[i]->getContent() == nullptr) {
+    int cardAreaSize = gameArea->getSize(ClickedArea::SIDE_AREA);
+    for (int i = 0; i < cardAreaSize; ++i) {
+        int fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::SIDE_AREA);
+        int fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::SIDE_AREA);
+        bool highlighted = gameArea->isSideFieldHighlighted(i);
+        if(gameArea->getSideContentOfIdx(i) == nullptr) {
             display->renderField(fieldX, fieldY, highlighted);
         } else {
-            Color color = cardArea[i]->getContent()->getColor();
-            CardType type = cardArea[i]->getContent()->getType();
-            int cardX = cardArea[i]->getContent()->getNextXPos(fieldX);
-            int cardY = cardArea[i]->getContent()->getNextYPos(fieldY);
-            int cardW = cardArea[i]->getContent()->getNextFlipAnimFrameWidth();
+            Color color = gameArea->getSideContentOfIdx(i)->getColor();
+            CardType type = gameArea->getSideContentOfIdx(i)->getType();
+            int cardX = gameArea->getSideContentOfIdx(i)->getNextXPos(fieldX);
+            int cardY = gameArea->getSideContentOfIdx(i)->getNextYPos(fieldY);
+            int cardW = gameArea->getSideContentOfIdx(i)->getNextFlipAnimFrameWidth();
             display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
         }
     }
@@ -284,7 +286,7 @@ void Game::spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color 
                 break;
             }
         }
-        placeToNextEmptyFieldInSideArea(std::move(tempCard));
+        gameArea->placeToNextEmptyFieldInSideArea(std::move(tempCard));
     }
 }
 
@@ -303,10 +305,10 @@ void Game::handlePlayerClicks() {
                 input->evaluatBattlePhaseClickEvent(event, gameArea, possibleMoves, source, destination, attacker, defender, getCurrentPlayerColor(), gameState);
             }
         } else if(gameState == GameState::WAITING_FOR_BLUE && event.getClickedArea() == ClickedArea::GAME_AREA) {
-            clearHighlights();
+            gameArea->clearHighlights();
             gameState = GameState::BLUE_MOVE_START;
         } else if(gameState == GameState::WAITING_FOR_RED && event.getClickedArea() == ClickedArea::GAME_AREA) {
-            clearHighlights();
+            gameArea->clearHighlights();
             gameState = GameState::RED_MOVE_START;
         }
 
@@ -315,6 +317,7 @@ void Game::handlePlayerClicks() {
 
 
 void Game::restartGame() {
+    //TODO Implement in game area class!!!
     for (int i = 0; i < gameArea.size(); ++i) {
         gameArea[i]->removeCard();
     }
@@ -351,18 +354,22 @@ void Game::triggerVictory(Color winner) {
 }
 
 void Game::renderDiscardPile() {
-    int fieldX, fieldY;
+    int fieldX, fieldY, discardPileSize;
     CardType typeToRender;
     Color cardColor;
-    for (int i = 0; i < discardPile.size(); ++i) {
-        fieldX = discardPile[i]->getX();
-        fieldY = discardPile[i]->getY();
-        if(discardPile[i]->getContent() != nullptr) {
-            typeToRender = discardPile[i]->getContent()->getType();
-            cardColor = discardPile[i]->getContent()->getColor();
-            int cardX = discardPile[i]->getContent()->getNextXPos(fieldX);
-            int cardY = discardPile[i]->getContent()->getNextYPos(fieldY);
-            int cardW = discardPile[i]->getContent()->getNextFlipAnimFrameWidth();
+    discardPileSize = gameArea->getSize(ClickedArea::DISCARD_PILE);
+    for (int i = 0; i < discardPileSize; ++i) {
+        //fieldX = discardPile[i]->getX();
+        fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::DISCARD_PILE);
+        //fieldY = discardPile[i]->getY();
+        fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::DISCARD_PILE);
+        //if(discardPile[i]->getContent() != nullptr) {
+        if(gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE) != nullptr) {
+            typeToRender = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getType();
+            cardColor = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getColor();
+            int cardX = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextXPos(fieldX);
+            int cardY = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextYPos(fieldY);
+            int cardW = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextFlipAnimFrameWidth();
             display->renderField(fieldX, fieldY, false, cardColor, typeToRender, cardX, cardY, cardW);
         }
     }
@@ -372,37 +379,37 @@ void Game::renderAvailableMoves() {
     int x, y;
     if(!possibleMoves.empty()) {
         for (int i = 0; i < possibleMoves.size(); ++i) {
-            x = gameArea[possibleMoves[i]]->getX();
-            y = gameArea[possibleMoves[i]]->getY();
+            x = gameArea->getXofFieldWithIdx(possibleMoves[i], ClickedArea::GAME_AREA);
+            y = gameArea->getYofFieldWithIdx(possibleMoves[i], ClickedArea::GAME_AREA);
             display->renderAvailableMove(x, y);
         }
     }
 }
 
 void Game::checkIfTied() {
-    if(!playerHasValidMoves(Color::RED) &&
-            !playerHasValidMoves(Color::BLUE)) {
+    if(!gameArea->playerHasValidMoves(Color::RED) &&
+            !gameArea->playerHasValidMoves(Color::BLUE)) {
         gameState = GameState::TIED;
     }
 }
 
-void Game::handlePlayerMoveInProgress() {
-
+void Game::handlePlayerMoveInProgress() 
+{
     checkIfTied();
     Color currentPlayerColor = getCurrentPlayerColor();
     if(!source.isEmpty()) {
         unsigned char moveDist;
-        moveDist = gameArea[source.fieldIndex]->getContent()->getMoveDistance();
-        possibleMoves = gatherNearbyValidFieldIndeces(moveDist, source.fieldIndex, currentPlayerColor);
+        moveDist = gameArea->getContentOfIdx(source.fieldIndex, ClickedArea::GAME_AREA)->getMoveDistance();
+        possibleMoves = gameArea->gatherNearbyValidFieldIndeces(moveDist, source.fieldIndex, currentPlayerColor);
     }
 
     if(gameState == GameState::BLUE_MOVE_IN_PROGRESS) {
-        if(!playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_RED_START;
-        resolveBattle();
+        if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_RED_START;
+        gameArea->resolveBattle(); //TODO needs attacker and defender as parameters?
 
     } else if(gameState == GameState::RED_MOVE_IN_PROGRESS) {
-        if(!playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_BLUE_START;
-        resolveBattle();
+        if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_BLUE_START;
+        gameArea->resolveBattle();
     }
     renderGameArea();
     renderDiscardPile();
@@ -433,14 +440,14 @@ void Game::handleInitInProgress() {
     }
 
     if(gameState == GameState::BLUE_INIT_IN_PROGRESS &&
-              isCardAreaEmpty()) {
-        changeFacingOfCards(Color::BLUE, true);
+              gameArea->isCardAreaEmpty()) {
+        gameArea->changeFacingOfCards(Color::BLUE, true);
         gameState = GameState::RED_INIT_START;
 
     } else if(gameState == GameState::RED_INIT_IN_PROGRESS &&
-              isCardAreaEmpty()) {
-        changeFacingOfCards(Color::RED, true);
-        changeFacingOfCards(Color::BLUE, true);
+              gameArea->isCardAreaEmpty()) {
+        gameArea->changeFacingOfCards(Color::RED, true);
+        gameArea->changeFacingOfCards(Color::BLUE, true);
         gameState = GameState::WAIT_FOR_BLUE_START;
     }
 }
@@ -457,12 +464,12 @@ void Game::handleVictory() {
 
 void Game::handleWaitPhaseStart() {
     if(gameState == GameState::WAIT_FOR_BLUE_START) {
-        changeFacingOfCards(Color::RED, true);
-        revealCombatants();
+        gameArea->changeFacingOfCards(Color::RED, true);
+        gameArea->revealCombatants();
 
     } else if(gameState == GameState::WAIT_FOR_RED_START) {
-        changeFacingOfCards(Color::BLUE, true);
-        revealCombatants();
+        gameArea->changeFacingOfCards(Color::BLUE, true);
+        gameArea->revealCombatants();
     }
     possibleMoves.clear();
     if(gameState == GameState::WAIT_FOR_BLUE_START) gameState = GameState::WAITING_FOR_BLUE;
@@ -471,11 +478,11 @@ void Game::handleWaitPhaseStart() {
 
 void Game::handlePlayerMoveStart() {
     if(gameState == GameState::BLUE_MOVE_START) {
-        changeFacingOfCards(Color::BLUE, false);
+        gameArea->changeFacingOfCards(Color::BLUE, false);
         gameState = GameState::BLUE_MOVE_IN_PROGRESS;
 
     } else if(gameState == GameState::RED_MOVE_START) {
-        changeFacingOfCards(Color::RED, false);
+        gameArea->changeFacingOfCards(Color::RED, false);
         gameState = GameState::RED_MOVE_IN_PROGRESS;
     }
 }

@@ -8,6 +8,7 @@
 #include "Display.h"
 #include "Button.h"
 #include "InputParser.h"
+#include "GameArea.h"
 #include <memory>
 
 class Game 
@@ -63,9 +64,10 @@ private:
     ProcessedEvent source;
     ProcessedEvent destination;
     std::unique_ptr<Display> display;
+    std::unique_ptr<GameArea> gameArea;
     GameState gameState;
-    std::vector<std::unique_ptr<Field>> gameArea;
-    std::vector<std::unique_ptr<Field>> cardArea;
-    std::vector<std::unique_ptr<Field>> discardPile;
+    //std::vector<std::unique_ptr<Field>> gameArea;
+    //std::vector<std::unique_ptr<Field>> cardArea;
+    //std::vector<std::unique_ptr<Field>> discardPile;
 
 };
