@@ -19,9 +19,10 @@ void Game::start() {
     display = std::unique_ptr<Display>(new Display());
     display->init("Stratego", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 780, 520, false);
 
-    gameArea->initGameArea();
-    gameArea->initCardArea();
-    gameArea->initDiscardPile();
+    gameArea = std::unique_ptr<GameArea>(new GameArea());
+    //gameArea->initGameArea();
+    //gameArea->initCardArea();
+    //gameArea->initDiscardPile();
 
     while(gameState != GameState::EXIT) {
         Uint32 timePassed = display->getTicks();
@@ -174,7 +175,7 @@ void Game::renderGameArea() {
     int boardSize = gameArea->getSize(ClickedArea::GAME_AREA);
     for (int i = 0; i < boardSize; ++i) {
         int fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::GAME_AREA);
-        int fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::SIDE_AREA);
+        int fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::GAME_AREA);
         bool highlighted = gameArea->isFieldHighlighted(i);
         if(gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA) == nullptr) {
             display->renderField(fieldX, fieldY, highlighted);
