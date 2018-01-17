@@ -19,13 +19,15 @@ public:
     void moveCard(ProcessedEvent& source, ProcessedEvent& destination);
     bool isCardAreaEmpty();
     bool playerHasValidMoves(Color color);
-    void gatherViableMovesInDir(int index, unsigned char moveDist, Color color, std::vector<int> &result, Direction dir);
+    void gatherViableMovesInDir(int index, unsigned char moveDist, Color currentPlayerColor, std::vector<int> &result, Direction dir);
     void clearHighlights();
+    const std::unique_ptr<Field>& getFieldOfIdx(int index, ClickedArea area);
     void changeFacingOfCards(Color color, bool faceDown);
-    void revealCombatants();
+    void revealCombatants(ProcessedEvent& attacker, ProcessedEvent& defender);
     std::vector<int> gatherNearbyValidFieldIndeces(unsigned char moveDist, int index, Color color);
-    void resolveBattle();
+    void resolveBattle(ProcessedEvent& attacker, ProcessedEvent& defender);
     int getNextEmptyDiscardPileIndex();
+    void resetGameArea();
 
     //New getters
     int getSize(ClickedArea areaToCheck);

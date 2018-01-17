@@ -4,6 +4,9 @@
 
 GameArea::GameArea()
 {
+    initCardArea();
+    initGameArea();
+    initDiscardPile();
 }
 
 
@@ -13,6 +16,7 @@ GameArea::~GameArea()
 
 void GameArea::initGameArea()
 {
+    gameArea.clear();
     size_t x, y;
     for (int i = 0; i < 10; ++i) {
         y = 10 + 50 * static_cast<size_t >(i);
@@ -195,6 +199,21 @@ void GameArea::clearHighlights()
     }
 }
 
+const std::unique_ptr<Field>& GameArea::getFieldOfIdx(int index, ClickedArea area)
+{
+    switch (area)
+    {
+    case ClickedArea::GAME_AREA:
+        return gameArea[index];
+    case ClickedArea::SIDE_AREA:
+        return cardArea[index];
+    case ClickedArea::DISCARD_PILE:
+        return discardPile[index];
+    default:
+        return gameArea[index];
+    }
+}
+
 void GameArea::changeFacingOfCards(Color color, bool faceDown)
 {
     int delay = 0;
@@ -212,7 +231,7 @@ void GameArea::changeFacingOfCards(Color color, bool faceDown)
     }
 }
 
-void GameArea::revealCombatants()
+void GameArea::revealCombatants(ProcessedEvent& attacker, ProcessedEvent& defender)
 {
     if(attacker.fieldIndex != -1 && defender.fieldIndex != -1) {
         gameArea[attacker.fieldIndex]->getContent()->setCurrentFlipAnim(FlipAnimState::TURNING_FACE_UP, 1, 25);
@@ -220,7 +239,7 @@ void GameArea::revealCombatants()
     }
 }
 
-std::vector<int> GameArea::gatherNearbyValidFieldIndeces(unsigned char moveDist, int index, Color color)
+std::vector<int> GameArea::gatherNearbyValidFieldIndeces(unsigned char moveDist, int index, Color currentPlayerColor)
 {
     std::vector<int> result;
     gatherViableMovesInDir(index, moveDist, currentPlayerColor, result, Direction::NORTH);
@@ -230,7 +249,7 @@ std::vector<int> GameArea::gatherNearbyValidFieldIndeces(unsigned char moveDist,
     return result;
 }
 
-void GameArea::resolveBattle()
+void GameArea::resolveBattle(ProcessedEvent& attacker, ProcessedEvent& defender)
 {
     if(attacker.isEmpty() || defender.isEmpty()) return;
     std::unique_ptr<Card> tempCard;
@@ -246,7 +265,7 @@ void GameArea::resolveBattle()
     } else if (gameArea[attacker.fieldIndex]->getContent()->canDefeat(gameArea[defender.fieldIndex]->getContent()->getType())) {
         if(gameArea[defender.fieldIndex]->getContent()->getType() == CardType::FLAG) {
             Color winnerColor = gameArea[attacker.fieldIndex]->getContent()->getColor();
-            triggerVictory(winnerColor);
+            //triggerVictory(winnerColor);
         }
 
         tempCard = gameArea[defender.fieldIndex]->removeCard();
@@ -271,6 +290,16 @@ int GameArea::getNextEmptyDiscardPileIndex()
     }
 }
 
+void GameArea::resetGameArea()
+{
+    for (int i = 0; i < gameArea.size(); ++i) {
+        gameArea[i]->removeCard();
+    }
+    for (int j = 0; j < cardArea.size(); ++j) {
+        cardArea[j]->removeCard();
+    }
+}
+
 int GameArea::getSize(ClickedArea areaToCheck)
 {
     switch (areaToCheck)
@@ -289,16 +318,6 @@ int GameArea::getSize(ClickedArea areaToCheck)
     }
 }
 
-int GameArea::getSideAreaSize()
-{
-    return cardArea.size();
-}
-
-int GameArea::getDiscardPileSize()
-{
-    return discardPile.size();
-}
-
 int GameArea::getXofFieldWithIdx(const int & index, ClickedArea area)
 {
     switch (area)
@@ -307,7 +326,7 @@ int GameArea::getXofFieldWithIdx(const int & index, ClickedArea area)
         return gameArea[index]->getX();
         break;
     case ClickedArea::SIDE_AREA:
-        return sideArea[index]->getX();
+        return cardArea[index]->getX();
         break;
     case ClickedArea::DISCARD_PILE:
         return discardPile[index]->getX();
@@ -325,27 +344,7 @@ int GameArea::getYofFieldWithIdx(const int & index, ClickedArea area)
     case ClickedArea::GAME_AREA:
         return gameArea[index]->getY();
     case ClickedArea::SIDE_AREA:
-        return sideArea[index]->getY();
-    case ClickedArea::DISCARD_PILE:
-        break;
-    default:
-        return 0;
-    }
-}
-
-int GameArea::getXofSideFieldWithIdx(const int & index)
-{
-    return cardArea[index]->getX();
-}
-
-int GameArea::getYofSideFieldWithIdx(const int & index, ClickedArea area)
-{
-    switch (area)
-    {
-    case ClickedArea::GAME_AREA:
-        return gameArea[index]->getY();
-    case ClickedArea::SIDE_AREA:
-        return sideArea[index]->getY();
+        return cardArea[index]->getY();
     case ClickedArea::DISCARD_PILE:
         break;
     default:
@@ -355,7 +354,7 @@ int GameArea::getYofSideFieldWithIdx(const int & index, ClickedArea area)
 
 bool GameArea::isFieldHighlighted(const int & index)
 {
-    return gameArea[index]->getIsHighlighted(index);
+    return gameArea[index]->getIsHighlighted();
 }
 
 bool GameArea::isSideFieldHighlighted(const int & index)
@@ -370,7 +369,7 @@ const std::unique_ptr<Card>& GameArea::getContentOfIdx(const int & index, Clicke
     case ClickedArea::GAME_AREA:
         return gameArea[index]->getContent();
     case ClickedArea::SIDE_AREA:
-        return sideArea[index]->getContent();
+        return cardArea[index]->getContent();
     case ClickedArea::DISCARD_PILE:
         return discardPile[index]->getContent();
     default:

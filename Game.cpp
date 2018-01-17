@@ -19,6 +19,10 @@ void Game::start() {
     display = std::unique_ptr<Display>(new Display());
     display->init("Stratego", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 780, 520, false);
 
+    gameArea->initGameArea();
+    gameArea->initCardArea();
+    gameArea->initDiscardPile();
+
     while(gameState != GameState::EXIT) {
         Uint32 timePassed = display->getTicks();
 
@@ -160,9 +164,9 @@ void Game::populateCardArea() {
 
 Game::Game() {
     gameState = GameState::BLUE_INIT_START;
-    gameArea->initGameArea();
-    gameArea->initCardArea();
-    gameArea->initDiscardPile();
+    //gameArea->initGameArea();
+    //gameArea->initCardArea();
+    //gameArea->initDiscardPile();
     initButtons();
 }
 
@@ -298,11 +302,11 @@ void Game::handlePlayerClicks() {
 
         if(gameState == GameState::RED_INIT_IN_PROGRESS ||
             gameState == GameState::BLUE_INIT_IN_PROGRESS){
-            input->evaluateInitPhaseClickEvent(event, gameArea, cardArea, source, destination, getCurrentPlayerColor());
+            input->evaluateInitPhaseClickEvent(event, gameArea, source, destination, getCurrentPlayerColor());
         } else if(gameState == GameState::BLUE_MOVE_IN_PROGRESS ||
                 gameState == GameState::RED_MOVE_IN_PROGRESS) {
             if(event.getClickedArea() == ClickedArea::GAME_AREA) {
-                input->evaluatBattlePhaseClickEvent(event, gameArea, possibleMoves, source, destination, attacker, defender, getCurrentPlayerColor(), gameState);
+                input->evaluateBattlePhaseClickEvent(event, gameArea, possibleMoves, source, destination, attacker, defender, getCurrentPlayerColor(), gameState);
             }
         } else if(gameState == GameState::WAITING_FOR_BLUE && event.getClickedArea() == ClickedArea::GAME_AREA) {
             gameArea->clearHighlights();
@@ -317,20 +321,9 @@ void Game::handlePlayerClicks() {
 
 
 void Game::restartGame() {
-    //TODO Implement in game area class!!!
-    for (int i = 0; i < gameArea.size(); ++i) {
-        gameArea[i]->removeCard();
-    }
-    for (int j = 0; j < cardArea.size(); ++j) {
-        cardArea[j]->removeCard();
-    }
+    gameArea->resetGameArea();
     gameState = GameState::BLUE_INIT_START;
-    clearHighlights();
-    if(source.getClickedArea() == ClickedArea::GAME_AREA) {
-        gameArea[source.fieldIndex]->unhighlight();
-    } else if(source.getClickedArea() == ClickedArea::SIDE_AREA) {
-        cardArea[source.sideAreaIndex]->unhighlight();
-    }
+    gameArea->clearHighlights();
     source.empty();
 }
 
@@ -405,11 +398,11 @@ void Game::handlePlayerMoveInProgress()
 
     if(gameState == GameState::BLUE_MOVE_IN_PROGRESS) {
         if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_RED_START;
-        gameArea->resolveBattle(); //TODO needs attacker and defender as parameters?
+        gameArea->resolveBattle(attacker, defender); //TODO needs attacker and defender as parameters?
 
     } else if(gameState == GameState::RED_MOVE_IN_PROGRESS) {
         if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_BLUE_START;
-        gameArea->resolveBattle();
+        gameArea->resolveBattle(attacker, defender);
     }
     renderGameArea();
     renderDiscardPile();
@@ -465,11 +458,11 @@ void Game::handleVictory() {
 void Game::handleWaitPhaseStart() {
     if(gameState == GameState::WAIT_FOR_BLUE_START) {
         gameArea->changeFacingOfCards(Color::RED, true);
-        gameArea->revealCombatants();
+        gameArea->revealCombatants(attacker, defender);
 
     } else if(gameState == GameState::WAIT_FOR_RED_START) {
         gameArea->changeFacingOfCards(Color::BLUE, true);
-        gameArea->revealCombatants();
+        gameArea->revealCombatants(attacker, defender);
     }
     possibleMoves.clear();
     if(gameState == GameState::WAIT_FOR_BLUE_START) gameState = GameState::WAITING_FOR_BLUE;
