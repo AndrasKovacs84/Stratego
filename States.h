@@ -19,12 +19,16 @@ public:
     GameType getGameType();
     GamePhase getGamePhase();
     Color getPlayerColor();
+    Color getOpponentColor();
+    TurnState getTurnState();
     void progressTurn();
+    void progressTurnState();
 
     //Setters
     void setUIState(UIState setting);
     void setGameType(GameType gameTypeToSet);
     void setGamePhase(GamePhase gamePhaseToSet);
+    void setTurnState(TurnState newState);
 
 private:
     States() {};

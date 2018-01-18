@@ -23,21 +23,21 @@ public:
 private:
 
     //Game init
-    void initButtons(); //TODO some UI init with menu
+    void initButtons(); 
 
     //Main Game Loop
-    void delegateAccordingToGameState();    //TODO will need one of these per game mode
-    void populateCardArea();    //TODO GAME area class
+    void delegateAccordingToGameState(); 
+    void populateCardArea();    
     void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
     void checkIfTied(); //Functions used in it are moved to the GameArea object.
 
     //Game state progressing functions, they also contain some other actions as well...
-    void handleInitInProgress(); //Changes facing of cards and progresses init phase game state
-    void handlePlayerMoveStart(); //Changes facing, progresses game state
-    void handlePlayerMoveInProgress(); //If only source is set, show possible moves, otherwise resolve battle, progress game state
-    void handleWaitPhaseStart(); //Change facing, reveal combatants, progress game state
-    void handleWaitForNextPlayer(); //render wait msg, render game area, NO GAME STATE PROGRESS...
-    void handleVictory(); //render victory screen, NO GAME STATE PROGRESS...
+    void handleInitInProgress();
+    void handlePlayerMoveStart();
+    void handlePlayerMoveInProgress();
+    void handleWaitPhaseStart(); 
+    void handleWaitForNextPlayer(); 
+    void handleVictory(); 
 
     //Rendering
     void renderButtons();
@@ -47,14 +47,8 @@ private:
     void renderAvailableMoves();
 
     //Input
-    void handlePlayerClicks(); // get player click from display, delegate to input processing function based on game state, progress game state
-    void restartGame(); //clears game area, sets game state
-    Color getCurrentPlayerColor(); // returns color according to game state
-
-
-    //Battle phase input
-    void triggerVictory(Color color); //Does nothing but sets game state to victory for color
-
+    void handlePlayerClicks();
+    void restartGame();
 
     std::vector<int> possibleMoves;
     std::unique_ptr<InputParser> input;
@@ -66,9 +60,5 @@ private:
     ProcessedEvent destination;
     std::unique_ptr<Display> display;
     std::unique_ptr<GameArea> gameArea;
-    GameState gameState;
-    //std::vector<std::unique_ptr<Field>> gameArea;
-    //std::vector<std::unique_ptr<Field>> cardArea;
-    //std::vector<std::unique_ptr<Field>> discardPile;
 
 };

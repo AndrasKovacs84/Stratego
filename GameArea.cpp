@@ -94,7 +94,7 @@ void GameArea::initCardPositions()
 
 void GameArea::moveCard(ProcessedEvent & source, ProcessedEvent & destination)
 {
-
+    GamePhase currentPhase = States::getInstance()->getGamePhase();
     std::unique_ptr<Card> tempCard;
     if(source.getClickedArea() == ClickedArea::GAME_AREA) {
         tempCard = gameArea[source.fieldIndex]->removeCard();
@@ -120,6 +120,10 @@ void GameArea::moveCard(ProcessedEvent & source, ProcessedEvent & destination)
     //    gameArea[source.fieldIndex]->highlight();
     //    gameArea[destination.fieldIndex]->highlight();
     //}
+    if (currentPhase == GamePhase::PLAYER_MOVE)
+    {
+        States::getInstance()->progressTurn();
+    }
 
     source.empty();
     destination.empty();
@@ -266,9 +270,10 @@ void GameArea::resolveBattle(ProcessedEvent& attacker, ProcessedEvent& defender)
 
     } else if (gameArea[attacker.fieldIndex]->getContent()->canDefeat(gameArea[defender.fieldIndex]->getContent()->getType())) {
         if(gameArea[defender.fieldIndex]->getContent()->getType() == CardType::FLAG) {
-            Color winnerColor = gameArea[attacker.fieldIndex]->getContent()->getColor();
+            //Color winnerColor = gameArea[attacker.fieldIndex]->getContent()->getColor();
             //TODO can't trigger victory until game state singleton is created
             //triggerVictory(winnerColor);
+            States::getInstance()->setGamePhase(GamePhase::VICTORY);
         }
 
         tempCard = gameArea[defender.fieldIndex]->removeCard();

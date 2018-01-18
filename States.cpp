@@ -43,6 +43,23 @@ Color States::getPlayerColor()
     return playerColor;
 }
 
+Color States::getOpponentColor()
+{
+    if (playerColor == Color::BLUE)
+    {
+        return Color::RED;
+    }
+    else
+    {
+        return Color::BLUE;
+    }
+}
+
+TurnState States::getTurnState()
+{
+    return turnState;
+}
+
 void States::progressTurn()
 {
     if (gameType == GameType::HOTSEAT)
@@ -50,6 +67,11 @@ void States::progressTurn()
         gameModeHotseatProgress();
     }
 
+}
+
+void States::progressTurnState()
+{
+    turnState = TurnState::IN_PROGRESS;
 }
 
 void States::setUIState(UIState setting)
@@ -65,6 +87,11 @@ void States::setGameType(GameType gameTypeToSet)
 void States::setGamePhase(GamePhase gamePhaseToSet)
 {
     gamePhase = gamePhaseToSet;
+}
+
+void States::setTurnState(TurnState newState)
+{
+    turnState = newState;
 }
 
 void States::flipPlayerColor()
@@ -83,12 +110,13 @@ void States::gameModeHotseatProgress()
 {
     if (gamePhase == GamePhase::CARD_PLACEMENT)
     {
-        flipPlayerColor();
         if (playerColor == Color::RED)
         {
             gamePhase = GamePhase::PLAYER_MOVE;
             turnState = TurnState::INIT;
         }
+        flipPlayerColor();
+        turnState = TurnState::INIT;
     }
     else if (gamePhase == GamePhase::PLAYER_MOVE)
     {
