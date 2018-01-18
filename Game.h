@@ -40,10 +40,12 @@ private:
     void handleVictory(); 
 
     //Rendering
+    void renderInOrder();
     void renderButtons();
-    void renderGameArea();
-    void renderCardArea();
-    void renderDiscardPile();
+    void renderMapOverlay();
+    void renderGameArea(bool isAnimated);
+    void renderCardArea(bool isAnimated);
+    void renderDiscardPile(bool isAnimated);
     void renderAvailableMoves();
 
     //Input

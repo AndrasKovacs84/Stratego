@@ -306,6 +306,10 @@ void GameArea::resetGameArea()
     for (int j = 0; j < cardArea.size(); ++j) {
         cardArea[j]->removeCard();
     }
+    for (size_t i = 0; i < discardPile.size(); i++)
+    {
+        discardPile[i]->removeCard();
+    }
 }
 
 int GameArea::getSize(ClickedArea areaToCheck)

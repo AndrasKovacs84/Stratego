@@ -28,9 +28,8 @@ void Game::start() {
 
         display->handleEvents();
         display->renderBackground();
-        renderButtons();
-        renderGameArea();
 
+        renderInOrder();
         delegateAccordingToGameState();
         handlePlayerClicks();
 
@@ -90,7 +89,7 @@ void Game::delegateAccordingToGameState() {
             handleWaitForNextPlayer();
         }
     }
-    else if (currentPhase == GamePhase::VICTORY || 
+    else if (currentPhase == GamePhase::VICTORY ||
         currentPhase == GamePhase::TIED)
     {
         handleVictory();
@@ -98,8 +97,8 @@ void Game::delegateAccordingToGameState() {
 }
 
 void Game::populateCardArea() {
-    //for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
-    for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
+    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
         auto currentTypeToSpawn = static_cast<CardType>(i);
         int amountToSpawn;
         Color colorToSpawnWith = States::getInstance()->getPlayerColor();
@@ -112,7 +111,6 @@ void Game::populateCardArea() {
         }
         case CardType::BOMB: {
             amountToSpawn = CardBomb::getNR_TO_SPAWN();
-            amountToSpawn = 2;
             //amountToSpawn = 2;
             spawnNrOfTypesOfCards(CardType::BOMB, amountToSpawn, colorToSpawnWith);
             break;
@@ -124,7 +122,6 @@ void Game::populateCardArea() {
         }
         case CardType::SCOUT: {
             amountToSpawn = CardScout::getNR_TO_SPAWN();
-            amountToSpawn = 1;
             //amountToSpawn = 1;
             spawnNrOfTypesOfCards(CardType::SCOUT, amountToSpawn, colorToSpawnWith);
             break;
@@ -175,14 +172,10 @@ void Game::populateCardArea() {
 }
 
 Game::Game() {
-    //gameState = GameState::BLUE_INIT_START;
-    //gameArea->initGameArea();
-    //gameArea->initCardArea();
-    //gameArea->initDiscardPile();
     initButtons();
 }
 
-void Game::renderGameArea() {
+void Game::renderGameArea(bool isAnimated) {
     int boardSize = gameArea->getSize(ClickedArea::GAME_AREA);
     for (int i = 0; i < boardSize; ++i) {
         int fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::GAME_AREA);
@@ -195,20 +188,25 @@ void Game::renderGameArea() {
             int cardX = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextXPos(fieldX);
             int cardY = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextYPos(fieldY);
             int cardW = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getNextFlipAnimFrameWidth();
-            if (gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getIsFaceDown()) {
-                Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
-                display->renderField(fieldX, fieldY, highlighted, color, cardX, cardY, cardW);
-            }
-            else {
-                Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
-                CardType type = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getType();
-                display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
+            bool isCardMoving = (cardX == fieldX && cardY == fieldY);
+            if (isCardMoving == isAnimated)
+            {
+                if (gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getIsFaceDown()) {
+                    Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
+                    display->renderField(fieldX, fieldY, highlighted, color, cardX, cardY, cardW);
+                }
+                else {
+                    Color color = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getColor();
+                    CardType type = gameArea->getContentOfIdx(i, ClickedArea::GAME_AREA)->getType();
+                    display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
+                }
+
             }
         }
     }
 }
 
-void Game::renderCardArea() {
+void Game::renderCardArea(bool isAnimated) {
     int cardAreaSize = gameArea->getSize(ClickedArea::SIDE_AREA);
     for (int i = 0; i < cardAreaSize; ++i) {
         int fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::SIDE_AREA);
@@ -218,19 +216,45 @@ void Game::renderCardArea() {
             display->renderField(fieldX, fieldY, highlighted);
         }
         else {
-            Color color = gameArea->getSideContentOfIdx(i)->getColor();
-            CardType type = gameArea->getSideContentOfIdx(i)->getType();
             int cardX = gameArea->getSideContentOfIdx(i)->getNextXPos(fieldX);
             int cardY = gameArea->getSideContentOfIdx(i)->getNextYPos(fieldY);
             int cardW = gameArea->getSideContentOfIdx(i)->getNextFlipAnimFrameWidth();
-            display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
+            bool isCardMoving = (cardX == fieldX && cardY == fieldY);
+            if (isCardMoving == isAnimated)
+            {
+                Color color = gameArea->getSideContentOfIdx(i)->getColor();
+                CardType type = gameArea->getSideContentOfIdx(i)->getType();
+                display->renderField(fieldX, fieldY, highlighted, color, type, cardX, cardY, cardW);
+            }
         }
     }
+}
+
+void Game::renderInOrder()
+{
+    renderButtons();
+    renderCardArea(true);
+    renderGameArea(true);
+    renderDiscardPile(true);
+    renderMapOverlay();
+    renderCardArea(false);
+    renderGameArea(false);
+    renderDiscardPile(false);
+    renderAvailableMoves();
 }
 
 void Game::renderButtons() {
     display->renderButton(restart.getPosition(), restart.getCurrentTexture());
     display->renderButton(exit.getPosition(), exit.getCurrentTexture());
+}
+
+void Game::renderMapOverlay()
+{
+    if (States::getInstance()->getGamePhase() == GamePhase::CARD_PLACEMENT)
+    {
+        Color playerColor = States::getInstance()->getPlayerColor();
+        display->renderMapOverlay(playerColor);
+    }
 }
 
 void Game::initButtons() {
@@ -317,11 +341,11 @@ void Game::handlePlayerClicks() {
         if (event.exitBtn) { States::getInstance()->setUIState(UIState::QUIT); }
         if (event.restartBtn) { restartGame(); }
 
-        if (currentPhase == GamePhase::CARD_PLACEMENT) //Do I need to check if INIT?
+        if (currentPhase == GamePhase::CARD_PLACEMENT)
         {
             input->evaluateInitPhaseClickEvent(event, gameArea, source, destination);
         }
-        else if (currentPhase == GamePhase::PLAYER_MOVE) //Do I need to check if INIT?
+        else if (currentPhase == GamePhase::PLAYER_MOVE)
         {
             if (event.getClickedArea() == ClickedArea::GAME_AREA) {
                 input->evaluateBattlePhaseClickEvent(event, gameArea, possibleMoves, source, destination, attacker, defender);
@@ -344,21 +368,28 @@ void Game::restartGame() {
     source.empty();
 }
 
-void Game::renderDiscardPile() {
+void Game::renderDiscardPile(bool isAnimated) {
     int fieldX, fieldY, discardPileSize;
     CardType typeToRender;
     Color cardColor;
     discardPileSize = gameArea->getSize(ClickedArea::DISCARD_PILE);
+
     for (int i = 0; i < discardPileSize; ++i) {
         fieldX = gameArea->getXofFieldWithIdx(i, ClickedArea::DISCARD_PILE);
         fieldY = gameArea->getYofFieldWithIdx(i, ClickedArea::DISCARD_PILE);
-        if (gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE) != nullptr) {
-            typeToRender = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getType();
-            cardColor = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getColor();
+
+        if (gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE) != nullptr)
+        {
             int cardX = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextXPos(fieldX);
             int cardY = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextYPos(fieldY);
             int cardW = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getNextFlipAnimFrameWidth();
-            display->renderField(fieldX, fieldY, false, cardColor, typeToRender, cardX, cardY, cardW);
+            bool isCardMoving = (cardX == fieldX && cardY == fieldY);
+            if (isCardMoving == isAnimated)
+            {
+                typeToRender = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getType();
+                cardColor = gameArea->getContentOfIdx(i, ClickedArea::DISCARD_PILE)->getColor();
+                display->renderField(fieldX, fieldY, false, cardColor, typeToRender, cardX, cardY, cardW);
+            }
         }
     }
 }
@@ -397,17 +428,14 @@ void Game::handlePlayerMoveInProgress()
     if (currentPhase == GamePhase::PLAYER_MOVE)
     {
         if (!gameArea->playerHasValidMoves(currentPlayerColor)) { States::getInstance()->progressTurn(); }
-        gameArea->resolveBattle(attacker, defender); 
+        gameArea->resolveBattle(attacker, defender);
 
     }
-    renderGameArea();
-    renderDiscardPile();
     if (!possibleMoves.empty()) renderAvailableMoves();
 }
 
 void Game::handleWaitForNextPlayer() {
     checkIfTied();
-    renderDiscardPile();
     GamePhase currentPhase = States::getInstance()->getGamePhase();
     Color playerColor = States::getInstance()->getPlayerColor();
     if (currentPhase == GamePhase::WAITING_FOR_PLAYER)
@@ -421,7 +449,6 @@ void Game::handleWaitForNextPlayer() {
             display->renderWaitMsg(Color::RED);
         }
     }
-    renderGameArea();
 }
 
 void Game::handleInitInProgress() {
@@ -429,8 +456,6 @@ void Game::handleInitInProgress() {
     Color playerColor = States::getInstance()->getPlayerColor();
     if (currentPhase == GamePhase::CARD_PLACEMENT)
     {
-        display->renderMapOverlay(playerColor);
-        renderCardArea();
         if (gameArea->isCardAreaEmpty())
         {
             gameArea->changeFacingOfCards(playerColor, true);
