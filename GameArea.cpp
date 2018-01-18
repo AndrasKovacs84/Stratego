@@ -107,6 +107,8 @@ void GameArea::moveCard(ProcessedEvent & source, ProcessedEvent & destination)
         cardArea[source.sideAreaIndex]->unhighlight();
     }
 
+    //TODO can't progress game state until the singleton is implemented
+    
     //if(gameState == GameState::BLUE_MOVE_IN_PROGRESS) {
     //    gameState = GameState::WAIT_FOR_RED_START;
     //    gameArea[source.fieldIndex]->highlight();
@@ -265,6 +267,7 @@ void GameArea::resolveBattle(ProcessedEvent& attacker, ProcessedEvent& defender)
     } else if (gameArea[attacker.fieldIndex]->getContent()->canDefeat(gameArea[defender.fieldIndex]->getContent()->getType())) {
         if(gameArea[defender.fieldIndex]->getContent()->getType() == CardType::FLAG) {
             Color winnerColor = gameArea[attacker.fieldIndex]->getContent()->getColor();
+            //TODO can't trigger victory until game state singleton is created
             //triggerVictory(winnerColor);
         }
 
@@ -346,7 +349,7 @@ int GameArea::getYofFieldWithIdx(const int & index, ClickedArea area)
     case ClickedArea::SIDE_AREA:
         return cardArea[index]->getY();
     case ClickedArea::DISCARD_PILE:
-        break;
+        return discardPile[index]->getY();
     default:
         return 0;
     }

@@ -78,8 +78,8 @@ void Game::delegateAccordingToGameState() {
 }
 
 void Game::populateCardArea() {
-    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
-    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT) ; ++i) {
+    //for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
+    for (int i = 0; i <= static_cast<int>(CardType::SCOUT) ; ++i) {
         auto currentTypeToSpawn = static_cast<CardType >(i);
         int amountToSpawn;
         Color colorToSpawnWith;
@@ -97,6 +97,7 @@ void Game::populateCardArea() {
             }
             case CardType::BOMB: {
                 amountToSpawn = CardBomb::getNR_TO_SPAWN();
+                amountToSpawn = 2;
                 //amountToSpawn = 2;
                 spawnNrOfTypesOfCards(CardType::BOMB, amountToSpawn, colorToSpawnWith);
                 break;
@@ -108,6 +109,7 @@ void Game::populateCardArea() {
             }
             case CardType::SCOUT: {
                 amountToSpawn = CardScout::getNR_TO_SPAWN();
+                amountToSpawn = 1;
                 //amountToSpawn = 1;
                 spawnNrOfTypesOfCards(CardType::SCOUT, amountToSpawn, colorToSpawnWith);
                 break;
@@ -394,13 +396,16 @@ void Game::handlePlayerMoveInProgress()
     if(!source.isEmpty()) {
         unsigned char moveDist;
         moveDist = gameArea->getContentOfIdx(source.fieldIndex, ClickedArea::GAME_AREA)->getMoveDistance();
+        //TODO Gathers nearby valid indeces every single frame! Correct it!
         possibleMoves = gameArea->gatherNearbyValidFieldIndeces(moveDist, source.fieldIndex, currentPlayerColor);
     }
 
+    //Check if player can move, if not, skip him
     if(gameState == GameState::BLUE_MOVE_IN_PROGRESS) {
         if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_RED_START;
         gameArea->resolveBattle(attacker, defender); //TODO needs attacker and defender as parameters?
 
+    //Check if player can move, if not, skip him
     } else if(gameState == GameState::RED_MOVE_IN_PROGRESS) {
         if(!gameArea->playerHasValidMoves(getCurrentPlayerColor())) gameState = GameState::WAIT_FOR_BLUE_START;
         gameArea->resolveBattle(attacker, defender);
