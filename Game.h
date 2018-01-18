@@ -8,10 +8,11 @@
 #include "Display.h"
 #include "Button.h"
 #include "InputParser.h"
+#include "GameArea.h"
 #include <memory>
 
-class Game {
-    friend class Display;
+class Game 
+{
 
 public:
     Game();
@@ -21,27 +22,21 @@ public:
 private:
 
     //Game init
-    void initButtons();
-    void initGameArea();
-    void initDiscardPile();
-    void initCardArea();
+    void initButtons(); //TODO some UI init with menu
 
     //Main Game Loop
-    void delegateAccordingToGameState();
-    void populateCardArea();
+    void delegateAccordingToGameState();    //TODO will need one of these per game mode
+    void populateCardArea();    //TODO GAME area class
     void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
-    void placeToNextEmptyFieldInSideArea(std::unique_ptr<Card> cardToPlace);
-    void initCardPositions();
+    void checkIfTied(); //Functions used in it are moved to the GameArea object.
 
-    void moveCard();
-    bool isCardAreaEmpty();
-    void checkIfTied();
-    void handleInitInProgress();
-    void handlePlayerMoveStart();
-    void handlePlayerMoveInProgress();
-    void handleWaitPhaseStart();
-    void handleWaitForNextPlayer();
-    void handleVictory();
+    //Game state progressing functions, they also contain some other actions as well...
+    void handleInitInProgress(); //Changes facing of cards and progresses init phase game state
+    void handlePlayerMoveStart(); //Changes facing, progresses game state
+    void handlePlayerMoveInProgress(); //If only source is set, show possible moves, otherwise resolve battle, progress game state
+    void handleWaitPhaseStart(); //Change facing, reveal combatants, progress game state
+    void handleWaitForNextPlayer(); //render wait msg, render game area, NO GAME STATE PROGRESS...
+    void handleVictory(); //render victory screen, NO GAME STATE PROGRESS...
 
     //Rendering
     void renderButtons();
@@ -49,23 +44,15 @@ private:
     void renderCardArea();
     void renderDiscardPile();
     void renderAvailableMoves();
-    void clearHighlights();
-    void changeFacingOfCards(Color color, bool faceDown);
-    void revealCombatants();
 
     //Input
-    void handlePlayerClicks();
-    void restartGame();
-    Color getCurrentPlayerColor();
+    void handlePlayerClicks(); // get player click from display, delegate to input processing function based on game state, progress game state
+    void restartGame(); //clears game area, sets game state
+    Color getCurrentPlayerColor(); // returns color according to game state
 
 
     //Battle phase input
-    bool playerHasValidMoves(Color color);
-    std::vector<int> gatherNearbyValidFieldIndeces(unsigned char moveDist, int index, Color color);
-    void gatherViableMovesInDir(int index, unsigned char moveDist, Color color, std::vector<int> &result, Direction dir);
-    void resolveBattle();
-    void triggerVictory(Color color);
-    int getNextEmptyDiscardPileIndex();
+    void triggerVictory(Color color); //Does nothing but sets game state to victory for color
 
 
     std::vector<int> possibleMoves;
@@ -77,9 +64,10 @@ private:
     ProcessedEvent source;
     ProcessedEvent destination;
     std::unique_ptr<Display> display;
+    std::unique_ptr<GameArea> gameArea;
     GameState gameState;
-    std::vector<std::unique_ptr<Field>> gameArea;
-    std::vector<std::unique_ptr<Field>> cardArea;
-    std::vector<std::unique_ptr<Field>> discardPile;
+    //std::vector<std::unique_ptr<Field>> gameArea;
+    //std::vector<std::unique_ptr<Field>> cardArea;
+    //std::vector<std::unique_ptr<Field>> discardPile;
 
 };
