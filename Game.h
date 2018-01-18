@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "InputParser.h"
 #include "GameArea.h"
+#include "States.h"
 #include <memory>
 
 class Game 

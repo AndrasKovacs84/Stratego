@@ -19,6 +19,8 @@ void Game::start() {
     display = std::unique_ptr<Display>(new Display());
     display->init("Stratego", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 780, 520, false);
 
+    States::getInstance();
+
     gameArea = std::unique_ptr<GameArea>(new GameArea());
     //gameArea->initGameArea();
     //gameArea->initCardArea();
