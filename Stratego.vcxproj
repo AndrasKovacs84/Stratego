@@ -113,6 +113,7 @@
     <ClCompile Include="GameArea.cpp" />
     <ClCompile Include="InputParser.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="States.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets.h" />
@@ -140,10 +141,16 @@
     <ClInclude Include="FlipAnimState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameArea.h" />
+    <ClInclude Include="GamePhase.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameType.h" />
     <ClInclude Include="InputParser.h" />
     <ClInclude Include="ProcessedEvent.hpp" />
+    <ClInclude Include="States.h" />
+    <ClInclude Include="Turn.h" />
+    <ClInclude Include="TurnState.h" />
     <ClInclude Include="UIElement.h" />
+    <ClInclude Include="UIState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@
 #include "SDL_events.h"
 #include "Coordinate.h"
 #include "ProcessedEvent.hpp"
+#include "GamePhase.h"
 
 struct sdl_deleter
 {
@@ -35,7 +36,8 @@ public:
     void renderButton(SDL_Rect destination, UIElement texture);
     void renderMapOverlay(Color color);
     void renderWaitMsg(Color color);
-    void renderVictory(GameState victory);
+    void renderVictory(Color playerColor);
+    void renderVictory();
     void renderAvailableMove(int x, int y);
     void delay();
     Uint32 getTicks();

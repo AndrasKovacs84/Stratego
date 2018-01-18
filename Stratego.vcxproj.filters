@@ -45,6 +45,9 @@
     <ClCompile Include="GameArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="States.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets.h">
@@ -133,6 +136,24 @@
     </ClInclude>
     <ClInclude Include="GameArea.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIState.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="GameType.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePhase.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Turn.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="TurnState.h">
+      <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

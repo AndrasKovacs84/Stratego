@@ -2,8 +2,9 @@
 #include <algorithm>
 
 void InputParser::evaluateInitPhaseClickEvent(ProcessedEvent event, std::unique_ptr<GameArea> &gameArea, ProcessedEvent &source,
-                                              ProcessedEvent &destination, Color currentPlayerColor) {
+                                              ProcessedEvent &destination) {
 
+    Color currentPlayerColor = States::getInstance()->getPlayerColor();
     if(event.getClickedArea() == ClickedArea::GAME_AREA) {
         if(event.isInTerritory(currentPlayerColor)) {
             initPhaseGameAreaClick(event, gameArea, source, destination);
@@ -68,9 +69,9 @@ void InputParser::initPhaseSideAreaClick(ProcessedEvent event, std::unique_ptr<G
 void InputParser::evaluateBattlePhaseClickEvent(ProcessedEvent event, std::unique_ptr<GameArea>& gameArea,
                                                std::vector<int> &possibleMoves, ProcessedEvent &source,
                                                ProcessedEvent &destination, ProcessedEvent &attacker,
-                                               ProcessedEvent &defender, Color currentPlayerColor,
-                                               GameState &gameState) {
-
+                                               ProcessedEvent &defender) 
+{
+    Color currentPlayerColor = States::getInstance()->getPlayerColor();
     if(gameArea->getContentOfIdx(event.fieldIndex, ClickedArea::GAME_AREA) == nullptr) {
         if(std::find(possibleMoves.begin(), possibleMoves.end(), event.fieldIndex) != possibleMoves.end()) {
             destination = event;
@@ -87,11 +88,12 @@ void InputParser::evaluateBattlePhaseClickEvent(ProcessedEvent event, std::uniqu
             if(std::find(possibleMoves.begin(), possibleMoves.end(), event.fieldIndex) != possibleMoves.end()) {
                 defender = event;
                 attacker = source;
-                if(currentPlayerColor == Color::BLUE) {
-                    gameState = GameState::WAIT_FOR_RED_START;
-                } else if(currentPlayerColor == Color::RED) {
-                    gameState = GameState::WAIT_FOR_BLUE_START;
-                }
+                States::getInstance()->progressTurn();
+                //if(currentPlayerColor == Color::BLUE) {
+                //    gameState = GameState::WAIT_FOR_RED_START;
+                //} else if(currentPlayerColor == Color::RED) {
+                //    gameState = GameState::WAIT_FOR_BLUE_START;
+                //}
                 source.empty();
                 destination.empty();
             }
