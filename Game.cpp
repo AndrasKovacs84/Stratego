@@ -96,78 +96,94 @@ void Game::delegateAccordingToGameState() {
     }
 }
 
+//void Game::populateCardArea() {
+//    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
+//    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+//        auto currentTypeToSpawn = static_cast<CardType>(i);
+//        int amountToSpawn;
+//        Color colorToSpawnWith = States::getInstance()->getPlayerColor();
+//
+//        switch (currentTypeToSpawn) {
+//        case CardType::FLAG: {
+//            amountToSpawn = CardFlag::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::FLAG, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::BOMB: {
+//            amountToSpawn = CardBomb::getNR_TO_SPAWN();
+//            //amountToSpawn = 2;
+//            spawnNrOfTypesOfCards(CardType::BOMB, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::SPY: {
+//            amountToSpawn = CardSpy::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::SPY, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::SCOUT: {
+//            amountToSpawn = CardScout::getNR_TO_SPAWN();
+//            //amountToSpawn = 1;
+//            spawnNrOfTypesOfCards(CardType::SCOUT, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::MINER: {
+//            amountToSpawn = CardMiner::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::MINER, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::SARGEANT: {
+//            amountToSpawn = CardSargeant::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::SARGEANT, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::LIEUTENANT: {
+//            amountToSpawn = CardLieutenant::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::LIEUTENANT, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::CAPTAIN: {
+//            amountToSpawn = CardCaptain::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::CAPTAIN, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::MAJOR: {
+//            amountToSpawn = CardMajor::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::MAJOR, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::COLONEL: {
+//            amountToSpawn = CardColonel::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::COLONEL, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::GENERAL: {
+//            amountToSpawn = CardGeneral::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::GENERAL, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        case CardType::MARSHALL: {
+//            amountToSpawn = CardMarshall::getNR_TO_SPAWN();
+//            spawnNrOfTypesOfCards(CardType::MARSHALL, amountToSpawn, colorToSpawnWith);
+//            break;
+//        }
+//        }
+//
+//    }
+//}
+
 void Game::populateCardArea() {
-    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
-    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
+        //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
         auto currentTypeToSpawn = static_cast<CardType>(i);
-        int amountToSpawn;
+        int amountToSpawn = Card::getNrToSpawn(currentTypeToSpawn);
         Color colorToSpawnWith = States::getInstance()->getPlayerColor();
+        std::unique_ptr<Card> tempCard = nullptr;
 
-        switch (currentTypeToSpawn) {
-        case CardType::FLAG: {
-            amountToSpawn = CardFlag::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::FLAG, amountToSpawn, colorToSpawnWith);
-            break;
+        for (size_t i = 0; i < amountToSpawn; i++)
+        {
+            tempCard = CardFactory::CreateInstance(currentTypeToSpawn, colorToSpawnWith);
+            gameArea->placeToNextEmptyFieldInSideArea(std::move(tempCard));
         }
-        case CardType::BOMB: {
-            amountToSpawn = CardBomb::getNR_TO_SPAWN();
-            //amountToSpawn = 2;
-            spawnNrOfTypesOfCards(CardType::BOMB, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::SPY: {
-            amountToSpawn = CardSpy::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::SPY, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::SCOUT: {
-            amountToSpawn = CardScout::getNR_TO_SPAWN();
-            //amountToSpawn = 1;
-            spawnNrOfTypesOfCards(CardType::SCOUT, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::MINER: {
-            amountToSpawn = CardMiner::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::MINER, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::SARGEANT: {
-            amountToSpawn = CardSargeant::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::SARGEANT, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::LIEUTENANT: {
-            amountToSpawn = CardLieutenant::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::LIEUTENANT, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::CAPTAIN: {
-            amountToSpawn = CardCaptain::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::CAPTAIN, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::MAJOR: {
-            amountToSpawn = CardMajor::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::MAJOR, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::COLONEL: {
-            amountToSpawn = CardColonel::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::COLONEL, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::GENERAL: {
-            amountToSpawn = CardGeneral::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::GENERAL, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        case CardType::MARSHALL: {
-            amountToSpawn = CardMarshall::getNR_TO_SPAWN();
-            spawnNrOfTypesOfCards(CardType::MARSHALL, amountToSpawn, colorToSpawnWith);
-            break;
-        }
-        }
-
     }
 }
 

@@ -44,10 +44,11 @@ public:
 
     int getNextXPos(int destinationX) {
         double step;
-        if(currentX < destinationX) {
+        if (currentX < destinationX) {
             step = destinationX - currentX;
             currentX += std::ceil(step / 30);
-        } else if(currentX > destinationX) {
+        }
+        else if (currentX > destinationX) {
             step = currentX - destinationX;
             currentX -= std::ceil(step / 30);
         }
@@ -56,10 +57,11 @@ public:
 
     int getNextYPos(int destinationY) {
         double step;
-        if(currentY < destinationY) {
+        if (currentY < destinationY) {
             step = destinationY - currentY;
             currentY += std::ceil(step / 30);
-        } else if(currentY > destinationY) {
+        }
+        else if (currentY > destinationY) {
             step = currentY - destinationY;
             currentY -= std::ceil(step / 30);
         }
@@ -80,7 +82,8 @@ public:
         if (delayFrames > 0) {
             delayFrames--;
             return 50;
-        } else {
+        }
+        else {
             if (animFrames > -25 && currentFlipState != FlipAnimState::NOT_ANIMATED) {
                 animFrames--;
             }
@@ -88,13 +91,33 @@ public:
                 if (currentFlipState == FlipAnimState::TURNING_FACE_DOWN) isFaceDown = true;
                 if (currentFlipState == FlipAnimState::TURNING_FACE_UP) isFaceDown = false;
             }
-            if(animFrames == -25) {
+            if (animFrames == -25) {
                 currentFlipState = FlipAnimState::NOT_ANIMATED;
                 animFrames = 25;
             }
-            return abs(animFrames)*2;
+            return abs(animFrames) * 2;
         }
     }
+
+    static const int getNrToSpawn(CardType type)
+    {
+        switch (type)
+        {
+        case CardType::FLAG: return 1; 
+        case CardType::BOMB: return 6;
+        case CardType::SPY: return 1;
+        case CardType::SCOUT: return 8;
+        case CardType::MINER: return 5;
+        case CardType::SARGEANT: return 4;
+        case CardType::LIEUTENANT: return 4;
+        case CardType::CAPTAIN: return 4;
+        case CardType::MAJOR: return 3;
+        case CardType::COLONEL: return 2;
+        case CardType::GENERAL: return 1;
+        case CardType::MARSHALL: return 1;
+        default: return 0;
+        }
+    };
 
 protected:
     int currentX;
