@@ -10,6 +10,7 @@
 #include "InputParser.h"
 #include "GameArea.h"
 #include "States.h"
+#include "CardFactory.h"
 #include <memory>
 
 class Game 

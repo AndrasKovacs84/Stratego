@@ -48,6 +48,9 @@
     <ClCompile Include="States.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="TurnState.h">
       <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="CardFactory.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
