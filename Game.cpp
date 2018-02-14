@@ -96,86 +96,12 @@ void Game::delegateAccordingToGameState() {
     }
 }
 
-//void Game::populateCardArea() {
-//    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL) ; ++i) {
-//    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
-//        auto currentTypeToSpawn = static_cast<CardType>(i);
-//        int amountToSpawn;
-//        Color colorToSpawnWith = States::getInstance()->getPlayerColor();
-//
-//        switch (currentTypeToSpawn) {
-//        case CardType::FLAG: {
-//            amountToSpawn = CardFlag::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::FLAG, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::BOMB: {
-//            amountToSpawn = CardBomb::getNR_TO_SPAWN();
-//            //amountToSpawn = 2;
-//            spawnNrOfTypesOfCards(CardType::BOMB, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::SPY: {
-//            amountToSpawn = CardSpy::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::SPY, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::SCOUT: {
-//            amountToSpawn = CardScout::getNR_TO_SPAWN();
-//            //amountToSpawn = 1;
-//            spawnNrOfTypesOfCards(CardType::SCOUT, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::MINER: {
-//            amountToSpawn = CardMiner::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::MINER, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::SARGEANT: {
-//            amountToSpawn = CardSargeant::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::SARGEANT, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::LIEUTENANT: {
-//            amountToSpawn = CardLieutenant::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::LIEUTENANT, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::CAPTAIN: {
-//            amountToSpawn = CardCaptain::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::CAPTAIN, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::MAJOR: {
-//            amountToSpawn = CardMajor::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::MAJOR, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::COLONEL: {
-//            amountToSpawn = CardColonel::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::COLONEL, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::GENERAL: {
-//            amountToSpawn = CardGeneral::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::GENERAL, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        case CardType::MARSHALL: {
-//            amountToSpawn = CardMarshall::getNR_TO_SPAWN();
-//            spawnNrOfTypesOfCards(CardType::MARSHALL, amountToSpawn, colorToSpawnWith);
-//            break;
-//        }
-//        }
-//
-//    }
-//}
-
 void Game::populateCardArea() {
-    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
-        //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+    //for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
+        for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
         auto currentTypeToSpawn = static_cast<CardType>(i);
         int amountToSpawn = Card::getNrToSpawn(currentTypeToSpawn);
+        amountToSpawn = 1;
         Color colorToSpawnWith = States::getInstance()->getPlayerColor();
         std::unique_ptr<Card> tempCard = nullptr;
 
@@ -292,63 +218,6 @@ void Game::initButtons() {
     exit.setPressedDown(false);
 }
 
-void Game::spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color) {
-    std::unique_ptr<Card> tempCard;
-    for (int i = 0; i < amountToSpawn; ++i) {
-        switch (typeToSpawn) {
-        case CardType::FLAG: {
-            tempCard = std::unique_ptr<CardFlag>(new CardFlag(color));
-            break;
-        }
-        case CardType::BOMB: {
-            tempCard = std::unique_ptr<CardBomb>(new CardBomb(color));
-            break;
-        }
-        case CardType::SPY: {
-            tempCard = std::unique_ptr<CardSpy>(new CardSpy(color));
-            break;
-        }
-        case CardType::SCOUT: {
-            tempCard = std::unique_ptr<CardScout>(new CardScout(color));
-            break;
-        }
-        case CardType::MINER: {
-            tempCard = std::unique_ptr<CardMiner>(new CardMiner(color));
-            break;
-        }
-        case CardType::SARGEANT: {
-            tempCard = std::unique_ptr<CardSargeant>(new CardSargeant(color));
-            break;
-        }
-        case CardType::LIEUTENANT: {
-            tempCard = std::unique_ptr<CardLieutenant>(new CardLieutenant(color));
-            break;
-        }
-        case CardType::CAPTAIN: {
-            tempCard = std::unique_ptr<CardCaptain>(new CardCaptain(color));
-            break;
-        }
-        case CardType::MAJOR: {
-            tempCard = std::unique_ptr<CardMajor>(new CardMajor(color));
-            break;
-        }
-        case CardType::COLONEL: {
-            tempCard = std::unique_ptr<CardColonel>(new CardColonel(color));
-            break;
-        }
-        case CardType::GENERAL: {
-            tempCard = std::unique_ptr<CardGeneral>(new CardGeneral(color));
-            break;
-        }
-        case CardType::MARSHALL: {
-            tempCard = std::unique_ptr<CardMarshall>(new CardMarshall(color));
-            break;
-        }
-        }
-        gameArea->placeToNextEmptyFieldInSideArea(std::move(tempCard));
-    }
-}
-
 void Game::handlePlayerClicks() {
     if (!display->isEventQueueEmpty()) {
         ProcessedEvent event = display->getEventFromQueue();
@@ -375,7 +244,6 @@ void Game::handlePlayerClicks() {
         }
     }
 }
-
 
 void Game::restartGame() {
     gameArea->resetGameArea();
