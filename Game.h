@@ -3,7 +3,6 @@
 #include <vector>
 #include "Direction.h"
 #include "Field.h"
-#include "Coordinate.h"
 #include "GameState.h"
 #include "Display.h"
 #include "Button.h"

@@ -16,15 +16,6 @@
     <Filter Include="Cards">
       <UniqueIdentifier>{fb6af6c9-3d05-472c-9f6b-0c0f69954d62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enums">
-      <UniqueIdentifier>{8f3b41de-b71f-45e7-b2c9-da1ea35dd53c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="States">
-      <UniqueIdentifier>{fe1f6821-8bf7-465f-a314-0283a9416cd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="States\enums">
-      <UniqueIdentifier>{be48c787-63ca-4cc6-8394-9d543fc69fbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{29a49910-aaff-4d39-9e2e-3b22269081ba}</UniqueIdentifier>
     </Filter>
@@ -46,16 +37,22 @@
     <Filter Include="Cards\enums">
       <UniqueIdentifier>{0cc46abf-ca1a-430e-a6cb-e4f4aae64481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\States">
+      <UniqueIdentifier>{fe1f6821-8bf7-465f-a314-0283a9416cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\States\enums">
+      <UniqueIdentifier>{be48c787-63ca-4cc6-8394-9d543fc69fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\MenuSystem">
+      <UniqueIdentifier>{4c43896e-0080-4e6a-9864-8f1c6d3937a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="States.cpp">
-      <Filter>States</Filter>
+      <Filter>Game\States</Filter>
     </ClCompile>
     <ClCompile Include="Display.cpp">
       <Filter>Game\SDL2</Filter>
@@ -78,14 +75,11 @@
     <ClCompile Include="CardFactory.cpp">
       <Filter>Cards\CardFactory</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Coordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Card.hpp">
       <Filter>Cards</Filter>
     </ClInclude>
@@ -125,11 +119,8 @@
     <ClInclude Include="CardSpy.hpp">
       <Filter>Cards</Filter>
     </ClInclude>
-    <ClInclude Include="ClickedArea.h">
-      <Filter>Enums</Filter>
-    </ClInclude>
     <ClInclude Include="States.h">
-      <Filter>States</Filter>
+      <Filter>Game\States</Filter>
     </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>Game\SDL2</Filter>
@@ -138,22 +129,22 @@
       <Filter>Game\SDL2</Filter>
     </ClInclude>
     <ClInclude Include="GamePhase.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="GameType.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="Turn.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="TurnState.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="UIState.h">
-      <Filter>States\enums</Filter>
+      <Filter>Game\States\enums</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Game</Filter>
@@ -187,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Game\GameArea</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ClickedArea.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

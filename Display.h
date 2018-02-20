@@ -6,7 +6,6 @@
 #include "Assets.h"
 #include "Field.h"
 #include "SDL_events.h"
-#include "Coordinate.h"
 #include "ProcessedEvent.hpp"
 #include "GamePhase.h"
 

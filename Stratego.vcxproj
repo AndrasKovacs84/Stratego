@@ -136,7 +136,6 @@
     <ClInclude Include="CardType.h" />
     <ClInclude Include="ClickedArea.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Field.h" />
