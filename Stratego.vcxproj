@@ -115,6 +115,7 @@
     <ClCompile Include="InputParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="States.cpp" />
     <ClCompile Include="Submenu.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="GameType.h" />
     <ClInclude Include="InputParser.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MenuItem.h" />
     <ClInclude Include="ProcessedEvent.hpp" />
     <ClInclude Include="States.h" />
     <ClInclude Include="Submenu.h" />

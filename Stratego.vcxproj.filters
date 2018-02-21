@@ -84,6 +84,9 @@
     <ClCompile Include="MainMenu.cpp">
       <Filter>Game\MenuSystem</Filter>
     </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Game\MenuSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.hpp">
@@ -198,6 +201,9 @@
       <Filter>Game\MenuSystem</Filter>
     </ClInclude>
     <ClInclude Include="SubmenuName.h">
+      <Filter>Game\MenuSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
       <Filter>Game\MenuSystem</Filter>
     </ClInclude>
   </ItemGroup>

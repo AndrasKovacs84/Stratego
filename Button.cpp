@@ -12,7 +12,7 @@ void Button::setPosition(const SDL_Rect &position) {
 
 void Button::setCaption(std::string caption)
 {
-    this.caption = caption;
+    this->caption = caption;
 }
 
 const SDL_Rect &Button::getPosition() const {

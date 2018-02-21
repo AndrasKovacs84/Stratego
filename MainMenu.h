@@ -1,7 +1,9 @@
 #pragma once
 #include "Submenu.h"
 #include "SubmenuName.h"
+#include "States.h"
 #include <map>
+#include <functional>
 
 class MainMenu
 {
@@ -10,7 +12,17 @@ public:
     void initMenu();
     ~MainMenu();
 private:
-    SubmenuName currentSubmenu;
+
+    //Submenu init functions:
+    Submenu initMainMenu();
+    Submenu initNewGameMenu();
+    Submenu initHowToPlayMenu();
+    Submenu initExitMenu();
+    Submenu initMultiplayerMenu();
+    Submenu initMultiHostMenu();
+    Submenu initMultiJoinMenu();
+
+    //SubmenuName currentSubmenu;
     std::map<SubmenuName, Submenu> submenus;
 
 };

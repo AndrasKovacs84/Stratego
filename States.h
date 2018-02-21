@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
+
 #include "UIState.h"
+#include "SubmenuName.h"
 #include "GameType.h"
 #include "GamePhase.h"
 #include "Turn.h"
@@ -16,6 +18,7 @@ public:
 
     //Getters
     UIState getUIState();
+    SubmenuName getCurrentSubmenu();
     GameType getGameType();
     GamePhase getGamePhase();
     Color getPlayerColor();
@@ -26,6 +29,7 @@ public:
 
     //Setters
     void setUIState(UIState setting);
+    void setCurrentSubmenu(SubmenuName submenu);
     void setGameType(GameType gameTypeToSet);
     void setGamePhase(GamePhase gamePhaseToSet);
     void setTurnState(TurnState newState);
@@ -40,6 +44,7 @@ private:
     void gameModeHotseatProgress();
 
     UIState uiState;
+    SubmenuName currentSubmenu;
     GameType gameType;
     GamePhase gamePhase;
     Color playerColor;

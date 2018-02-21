@@ -9,6 +9,7 @@
 #include "InputParser.h"
 #include "GameArea.h"
 #include "States.h"
+#include "MainMenu.h"
 #include "CardFactory.h"
 #include <memory>
 
@@ -62,5 +63,6 @@ private:
     ProcessedEvent destination;
     std::unique_ptr<Display> display;
     std::unique_ptr<GameArea> gameArea;
+    std::unique_ptr<MainMenu> mainMenu;
 
 };

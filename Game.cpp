@@ -23,6 +23,9 @@ void Game::start() {
 
     gameArea = std::unique_ptr<GameArea>(new GameArea());
 
+    mainMenu = std::unique_ptr<MainMenu>(new MainMenu());
+    mainMenu->initMenu();
+
     while (States::getInstance()->getUIState() != UIState::QUIT) {
         Uint32 timePassed = display->getTicks();
 
