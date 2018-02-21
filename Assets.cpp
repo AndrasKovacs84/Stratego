@@ -124,6 +124,36 @@ Assets::Assets() {
     tempRect.x = 650;
     tempRect.y = 570;
     UIElements[UIElement::AVAILABLE_MOVE] = tempRect;
+
+    tempRect.h = 260;
+    tempRect.w = 780;
+    tempRect.x = 0;
+    tempRect.y = 1180;
+    UIElements[UIElement::MENU_BACK_TOP] = tempRect;
+
+    tempRect.h = 260;
+    tempRect.w = 780;
+    tempRect.x = 0;
+    tempRect.y = 1440;
+    UIElements[UIElement::MENU_BACK_BOTTOM] = tempRect;
+
+    tempRect.h = 510;
+    tempRect.w = 500;
+    tempRect.x = 780;
+    tempRect.y = 1180;
+    UIElements[UIElement::MENU] = tempRect;
+
+    tempRect.h = 50;
+    tempRect.w = 270;
+    tempRect.x = 780;
+    tempRect.y = 1080;
+    UIElements[UIElement::MENU_BTN] = tempRect;
+
+    tempRect.h = 50;
+    tempRect.w = 270;
+    tempRect.x = 780;
+    tempRect.y = 1130;
+    UIElements[UIElement::MENU_BTN_PRESSED] = tempRect;
 }
 
 

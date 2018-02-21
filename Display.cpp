@@ -35,6 +35,16 @@ void Display::init(const char *title, int xpos, int ypos, int width, int height,
             std::cout << "couldn't load img " << SDL_GetError() << std::endl;
         }
 
+        if (TTF_Init() == -1) {
+            printf("TTF_Init: %s\n", TTF_GetError());
+            exit(2);
+        }
+        menuFont = load_font("assets/Sketch_Gothic_School.ttf");
+        if (!menuFont)
+        {
+            std::cout << "couldn't load font " << TTF_GetError() << std::endl;
+        }
+
     }
     else {
         isRunning = false;
@@ -57,6 +67,21 @@ std::unique_ptr<SDL_Texture, sdl_deleter> Display::load_texture(const std::strin
     return std::unique_ptr<SDL_Texture, sdl_deleter>(
         IMG_LoadTexture_RW(renderer.get(), SDL_RWFromFile(filename.c_str(), "rb"), 1),
         sdl_deleter());
+}
+
+std::unique_ptr<TTF_Font, sdl_deleter> Display::load_font(const std::string & filename)
+{
+    return std::unique_ptr<TTF_Font, sdl_deleter>(
+        TTF_OpenFont(filename.c_str(), 42),
+        sdl_deleter());
+}
+
+std::unique_ptr<SDL_Texture, sdl_deleter> Display::text_to_texture(TTF_Font* font, const std::string & text, SDL_Color color)
+{
+    SDL_Surface* surfaceMsg = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Texture* textureMsg = SDL_CreateTextureFromSurface(renderer.get(), surfaceMsg);
+    SDL_FreeSurface(surfaceMsg);
+    return std::unique_ptr<SDL_Texture, sdl_deleter>(textureMsg);
 }
 
 void Display::handleEvents() {
@@ -83,7 +108,7 @@ void Display::handleEvents() {
 
 void Display::renderBackground()
 {
-    SDL_Rect source, destination;
+    SDL_Rect source;
     source.h = 520;
     source.w = 780;
     source.x = 0;
@@ -281,6 +306,58 @@ void Display::renderAvailableMove(int x, int y) {
     destination.y = y;
 
     SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::AVAILABLE_MOVE), &destination);
+}
+
+void Display::renderMenu(const std::unique_ptr<MainMenu>& menu)
+{
+    size_t x = 0;
+    size_t y = 0;
+    SDL_Rect destination;
+    destination.h = 260;
+    destination.w = 780;
+    destination.x = 0;
+    destination.y = 0;
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BACK_TOP), &destination);
+    destination.x = 0;
+    destination.y = 260;
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BACK_BOTTOM), &destination);
+
+    SubmenuName currentSubmenuName = States::getInstance()->getCurrentSubmenu();
+    Submenu& currentSubmenu = menu->getSubmenu(currentSubmenuName);
+
+    x = currentSubmenu.getNextX();
+    destination.h = 510;
+    destination.w = 500;
+    destination.x = x;
+    destination.y = 0;
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU), &destination);
+
+    size_t menuSize = currentSubmenu.getMenuSize();
+    std::string btnCaption;
+    SDL_Color white = { 255, 255, 255 };
+    for (size_t i = 0; i < menuSize; i++)
+    {
+        btnCaption = currentSubmenu.getCaption(i);
+        if (btnCaption != "")
+        {
+            std::unique_ptr<SDL_Texture, sdl_deleter> caption = text_to_texture(menuFont.get(), btnCaption, white);
+            x = currentSubmenu.getBtnX();
+            y = currentSubmenu.getBtnY(i);
+            destination.x = x;
+            destination.y = y;
+            destination.w = 270;
+            destination.h = 50;
+            SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN), &destination);
+            
+            int btnWidth = destination.w;
+            int btnHeight = destination.h;
+            SDL_QueryTexture(caption.get(), NULL, NULL, &destination.w, &destination.h);
+            destination.x = x + (btnWidth - destination.w) / 2;
+            destination.y = y + (btnHeight - destination.h) / 2;
+            SDL_RenderCopy(renderer.get(), caption.get(), NULL, &destination);
+        }
+    }
+
 }
 
 bool Display::isIsRunning() const {

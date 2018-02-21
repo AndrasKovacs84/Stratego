@@ -7,11 +7,12 @@ class MenuItem
 public:
     MenuItem();
     MenuItem(std::string caption, std::function<void()> onClickAction);
-    void action();
     ~MenuItem();
+
+    void action();
+    const std::string getCaption() const;
+
 private:
-    size_t relativeX;
-    size_t relativeY;
     std::string caption;
     std::function<void()> onClickAction;
 

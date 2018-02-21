@@ -17,7 +17,7 @@ void MenuItem::action()
     onClickAction();
 }
 
-const std::string& MenuItem::getCaption() const
+const std::string MenuItem::getCaption() const
 {
     return caption;
 }

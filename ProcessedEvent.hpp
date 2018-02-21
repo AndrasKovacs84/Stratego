@@ -6,9 +6,10 @@ struct ProcessedEvent {
     bool exitBtn = false;
     int fieldIndex = -1;
     int sideAreaIndex = -1;
+    int menuItem = -1;
 
     bool isEmpty() {
-        return (!restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1);
+        return (!restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
     }
 
     bool isInBlueTerritory() {
@@ -40,5 +41,6 @@ struct ProcessedEvent {
         exitBtn = false;
         fieldIndex = -1;
         sideAreaIndex = -1;
+        menuItem = -1;
     }
 };

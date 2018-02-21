@@ -11,6 +11,8 @@ public:
     MainMenu();
     void initMenu();
     ~MainMenu();
+
+    Submenu& getSubmenu(SubmenuName name);
 private:
 
     //Submenu init functions:

@@ -101,7 +101,7 @@ void Game::delegateAccordingToGameState() {
 
 void Game::populateCardArea() {
     //for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
-        for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+    for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
         auto currentTypeToSpawn = static_cast<CardType>(i);
         int amountToSpawn = Card::getNrToSpawn(currentTypeToSpawn);
         amountToSpawn = 1;
@@ -177,15 +177,24 @@ void Game::renderCardArea(bool isAnimated) {
 
 void Game::renderInOrder()
 {
-    renderButtons();
-    renderCardArea(true);
-    renderGameArea(true);
-    renderDiscardPile(true);
-    renderMapOverlay();
-    renderCardArea(false);
-    renderGameArea(false);
-    renderDiscardPile(false);
-    renderAvailableMoves();
+    UIState currentState = States::getInstance()->getUIState();
+
+    if (currentState == UIState::MENU)
+    {
+        display->renderMenu(mainMenu);
+    }
+    else
+    {
+        renderButtons();
+        renderCardArea(true);
+        renderGameArea(true);
+        renderDiscardPile(true);
+        renderMapOverlay();
+        renderCardArea(false);
+        renderGameArea(false);
+        renderDiscardPile(false);
+        renderAvailableMoves();
+    }
 }
 
 void Game::renderButtons() {

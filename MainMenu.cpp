@@ -26,6 +26,11 @@ MainMenu::~MainMenu()
 {
 }
 
+Submenu & MainMenu::getSubmenu(SubmenuName name)
+{
+    return submenus[name];
+}
+
 
 Submenu MainMenu::initMainMenu()
 {
