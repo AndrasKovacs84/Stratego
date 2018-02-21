@@ -114,7 +114,9 @@
     <ClCompile Include="GameArea.cpp" />
     <ClCompile Include="InputParser.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="States.cpp" />
+    <ClCompile Include="Submenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets.h" />
@@ -146,8 +148,11 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameType.h" />
     <ClInclude Include="InputParser.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="ProcessedEvent.hpp" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="Submenu.h" />
+    <ClInclude Include="SubmenuName.h" />
     <ClInclude Include="Turn.h" />
     <ClInclude Include="TurnState.h" />
     <ClInclude Include="UIElement.h" />

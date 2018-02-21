@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL_rect.h>
 #include "UIElement.h"
+#include <string>
 
 class Button {
 public:
@@ -12,10 +13,12 @@ public:
     void setNormalTexture(UIElement normalTexture);
     void setPressedDownTexture(UIElement pressedDownTexture);
     void setPosition(const SDL_Rect &position);
+    void setCaption(std::string caption);
 
     void setPressedDown(bool pressedDown);
 
 private:
+    std::string caption;
     SDL_Rect position;
     bool pressedDown;
     UIElement normalTexture;

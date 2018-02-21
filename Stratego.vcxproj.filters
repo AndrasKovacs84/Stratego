@@ -78,6 +78,12 @@
     <ClCompile Include="Button.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Submenu.cpp">
+      <Filter>Game\MenuSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Game\MenuSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.hpp">
@@ -184,6 +190,15 @@
     </ClInclude>
     <ClInclude Include="ClickedArea.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Submenu.h">
+      <Filter>Game\MenuSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Game\MenuSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SubmenuName.h">
+      <Filter>Game\MenuSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
