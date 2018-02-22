@@ -2,6 +2,7 @@
 
 enum class SubmenuName
 {
+    NONE,
     MAIN_MENU,
     NEW_GAME, 
         MULTIPLAYER,

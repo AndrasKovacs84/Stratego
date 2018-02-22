@@ -6,11 +6,7 @@ MenuItem::MenuItem()
 {
 }
 
-MenuItem::MenuItem(std::string caption, std::function<void()> onClickAction) : pressed(false), caption(caption), onClickAction(onClickAction)
-{
-    //this->caption = caption;
-    //this->onClickAction = onClickAction;
-}
+MenuItem::MenuItem(std::string caption, std::function<void()> onClickAction) : pressed(false), caption(caption), onClickAction(onClickAction) {}
 
 void MenuItem::action()
 {

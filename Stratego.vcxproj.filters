@@ -203,9 +203,6 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Game\MenuSystem</Filter>
     </ClInclude>
-    <ClInclude Include="SubmenuName.h">
-      <Filter>Game\MenuSystem</Filter>
-    </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Game\MenuSystem</Filter>
     </ClInclude>
@@ -226,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="SubmenuAnimState.h">
       <Filter>Game\MenuSystem\enums</Filter>
+    </ClInclude>
+    <ClInclude Include="SubmenuName.h">
+      <Filter>Game\MenuSystem\enums</Filter>
+    </ClInclude>
+    <ClInclude Include="InputType.h">
+      <Filter>Game\SDL2\InputParser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

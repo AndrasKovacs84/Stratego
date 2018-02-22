@@ -2,9 +2,10 @@
 
 #include "Color.h"
 #include "ClickedArea.h"
+#include "InputType.h"
 
 struct ProcessedEvent {
-    SDL_EventType inputType = SDL_FIRSTEVENT;
+    InputType inputType = InputType::NONE;
     bool restartBtn = false;
     bool exitBtn = false;
     int fieldIndex = -1;
@@ -12,7 +13,7 @@ struct ProcessedEvent {
     int menuItem = -1;
 
     bool isEmpty() {
-        return (inputType == SDL_FIRSTEVENT && !restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
+        return (inputType == InputType::NONE && !restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
     }
 
     bool isInBlueTerritory() {
@@ -40,7 +41,7 @@ struct ProcessedEvent {
     }
 
     void empty() {
-        inputType = SDL_FIRSTEVENT;
+        inputType = InputType::NONE;
         restartBtn = false;
         exitBtn = false;
         fieldIndex = -1;

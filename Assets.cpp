@@ -154,6 +154,12 @@ Assets::Assets() {
     tempRect.x = 780;
     tempRect.y = 1130;
     UIElements[UIElement::MENU_BTN_PRESSED] = tempRect;
+
+    tempRect.h = 520;
+    tempRect.w = 780;
+    tempRect.x = 0;
+    tempRect.y = 1700;
+    UIElements[UIElement::SPLASH] = tempRect;
 }
 
 

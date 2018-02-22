@@ -18,6 +18,8 @@ public:
     Submenu& getSubmenu(SubmenuName name);
 
     int getNextY(bool top);
+    void setAnimation(BackgroundAnimState animation);
+    bool isAnimated();
 
 private:
 
@@ -44,8 +46,9 @@ private:
     Submenu initMultiHostMenu();
     Submenu initMultiJoinMenu();
 
-    //SubmenuName currentSubmenu;
+    SubmenuName previousSubmenu;
     std::map<SubmenuName, Submenu> submenus;
+
 
 };
 

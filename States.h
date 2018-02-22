@@ -19,6 +19,7 @@ public:
     //Getters
     UIState getUIState();
     SubmenuName getCurrentSubmenu();
+    SubmenuName getPreviousSubmenu();
     GameType getGameType();
     GamePhase getGamePhase();
     Color getPlayerColor();
@@ -34,6 +35,8 @@ public:
     void setGamePhase(GamePhase gamePhaseToSet);
     void setTurnState(TurnState newState);
 
+    void clearSubmenus();
+
 private:
     States() {};
     States(States const&) {};
@@ -45,6 +48,7 @@ private:
 
     UIState uiState;
     SubmenuName currentSubmenu;
+    SubmenuName previousSubmenu;
     GameType gameType;
     GamePhase gamePhase;
     Color playerColor;

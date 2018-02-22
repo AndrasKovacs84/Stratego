@@ -7,6 +7,7 @@
 #include "ProcessedEvent.hpp"
 #include "UIState.h"
 #include "States.h"
+#include "InputType.h"
 
 #include <map>
 #include <vector>
@@ -17,7 +18,7 @@ public:
     static InputParser* getInstance();
 
     void registerMenuItem(SubmenuName submenu, size_t menuItemNr);
-    ProcessedEvent processEvent(int mouseX, int mouseY, SDL_EventType eventToProcess);
+    ProcessedEvent processEvent(int mouseX, int mouseY, InputType eventToProcess);
 
 private:
     InputParser() {};
@@ -27,8 +28,8 @@ private:
 
 
 
-    ProcessedEvent processMenuEvent(int mouseX, int mouseY, SDL_EventType eventToProcess);
-    ProcessedEvent processInGameEvent(int x, int y, SDL_EventType input);
+    ProcessedEvent processMenuEvent(int mouseX, int mouseY, InputType eventToProcess);
+    ProcessedEvent processInGameEvent(int x, int y, InputType input);
     int processGameAreaClick(int x, int y);
     int processSideAreaClick(int x, int y);
 

@@ -1,11 +1,12 @@
 #pragma once
 #include "SDL_events.h"
 #include <string>
+#include "InputType.h"
 
 class InteractableArea
 {
 public:
-    InteractableArea(int minX, int maxX, int minY, int maxY, int menuItem, SDL_EventType interactTo)
+    InteractableArea(int minX, int maxX, int minY, int maxY, int menuItem, InputType interactTo)
     {
         _minX = minX;
         _maxX = maxX;
@@ -15,7 +16,7 @@ public:
         _interactTo = interactTo;
     };
 
-    bool isEventValid(int x, int y, SDL_EventType eventToCheck)
+    bool isEventValid(int x, int y, InputType eventToCheck)
     {
         std::string dummy;
         if (x >= _minX && 
@@ -40,5 +41,5 @@ private:
     int _minY;
     int _maxY;
     int _menuItem = -1;
-    SDL_EventType _interactTo;
+    InputType _interactTo;
 };

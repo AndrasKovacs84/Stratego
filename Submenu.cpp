@@ -2,9 +2,7 @@
 
 
 
-Submenu::Submenu()
-{
-}
+Submenu::Submenu() : _x(Submenu::SCREEN_LEFT_EDGE), _y(0), currentAnimState(SubmenuAnimState::LEFT_TO_CENTER) {}
 
 
 Submenu::~Submenu()
@@ -24,17 +22,27 @@ void Submenu::btnAction(size_t btnIdx)
     }
 }
 
-size_t Submenu::getNextX()
+int Submenu::getNextX()
 {
+    int target = 0;
+    if (currentAnimState == SubmenuAnimState::NOT_ANIMATED) return _x;
+    if (currentAnimState == SubmenuAnimState::CENTER_TO_RIGHT) target = Submenu::SCREEN_RIGHT_EDGE;
+    if (currentAnimState == SubmenuAnimState::LEFT_TO_CENTER) target = Submenu::SCREEN_MIDDLE_X;
+    _x += progressTowards(_x, target);
+    if (_x == target) 
+    { 
+        currentAnimState = SubmenuAnimState::NOT_ANIMATED; 
+        //_x = Submenu::SCREEN_MIDDLE_X;
+    }
     return _x;
 }
 
-size_t Submenu::getBtnX()
+int Submenu::getBtnX()
 {
     return _x + LEFT_OFFSET_TO_BTNS;
 }
 
-size_t Submenu::getBtnY(size_t btnIdx)
+int Submenu::getBtnY(size_t btnIdx)
 {
     size_t result = _y;
     if (btnIdx <= MENU_SIZE)
@@ -75,4 +83,27 @@ void Submenu::clearPresses()
             options[i].setPressed(false);
         }
     }
+}
+
+void Submenu::setAnimState(SubmenuAnimState nextState)
+{
+    currentAnimState = nextState;
+}
+
+void Submenu::setX(int x)
+{
+    _x = x;
+}
+
+bool Submenu::isAnimated()
+{
+    return currentAnimState != SubmenuAnimState::NOT_ANIMATED;
+}
+
+int Submenu::progressTowards(int from, int target)
+{
+    double nextY = (target - from) / 5.0;
+    if (nextY < 0) { nextY = std::floor(nextY); }
+    else { nextY = std::ceil(nextY); }
+    return static_cast<int>(nextY);
 }

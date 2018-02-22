@@ -15,16 +15,14 @@ void InputParser::registerMenuItem(SubmenuName submenu, size_t menuItemNr)
     maxX = minX + 270; // 270 == btn width registered in assets.cpp
     minY = Submenu::TOP_OFFSET_TO_BTNS + (menuItemNr * (Submenu::OFFSET_BETWEEN_BTNS + 50));
     maxY = minY + 50; // 50 == btn height registered in assets.cpp
-    SDL_EventType eventName = SDL_MOUSEBUTTONDOWN;
-    InteractableArea newAreaBtnDown(minX, maxX, minY, maxY, menuItemNr, eventName);
+    InteractableArea newAreaBtnDown(minX, maxX, minY, maxY, menuItemNr, InputType::MOUSE_CLICK_DOWN);
     interactableAreaRegistrar[submenu].push_back(newAreaBtnDown);
 
-    eventName = SDL_MOUSEBUTTONUP;
-    InteractableArea newAreaBtnUp(minX, maxX, minY, maxY, menuItemNr, eventName);
+    InteractableArea newAreaBtnUp(minX, maxX, minY, maxY, menuItemNr, InputType::MOUSE_CLICK_RELEASE);
     interactableAreaRegistrar[submenu].push_back(newAreaBtnUp);
 }
 
-ProcessedEvent InputParser::processEvent(int mouseX, int mouseY, SDL_EventType eventToProcess)
+ProcessedEvent InputParser::processEvent(int mouseX, int mouseY, InputType eventToProcess)
 {
     ProcessedEvent processedEvent;
     UIState currentState = States::getInstance()->getUIState();
@@ -37,12 +35,16 @@ ProcessedEvent InputParser::processEvent(int mouseX, int mouseY, SDL_EventType e
     {
         processedEvent = processInGameEvent(mouseX, mouseY, eventToProcess);
     }
+    else
+    {
+        processedEvent.inputType = eventToProcess;
+    }
 
 
     return processedEvent;
 }
 
-ProcessedEvent InputParser::processMenuEvent(int mouseX, int mouseY, SDL_EventType eventToProcess)
+ProcessedEvent InputParser::processMenuEvent(int mouseX, int mouseY, InputType eventToProcess)
 {
     ProcessedEvent processedEvent;
     SubmenuName currentSubmenu = States::getInstance()->getCurrentSubmenu();
@@ -61,7 +63,7 @@ ProcessedEvent InputParser::processMenuEvent(int mouseX, int mouseY, SDL_EventTy
     return processedEvent;
 }
 
-ProcessedEvent InputParser::processInGameEvent(int x, int y, SDL_EventType input) {
+ProcessedEvent InputParser::processInGameEvent(int x, int y, InputType input) {
     ProcessedEvent processedEvent;
     processedEvent.inputType = input;
     if (x < 10 || x>770 || y < 10 || y > 510) { return processedEvent; }

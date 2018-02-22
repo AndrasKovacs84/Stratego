@@ -32,8 +32,8 @@ void Game::start() {
         display->handleEvents();
         display->renderBackground();
 
-        renderInOrder();
         delegateAccordingToGameState();
+        renderInOrder();
         handlePlayerClicks();
 
         if (!source.isEmpty() && !destination.isEmpty()) {
@@ -53,11 +53,20 @@ void Game::start() {
 void Game::delegateAccordingToGameState() {
     GamePhase currentPhase = States::getInstance()->getGamePhase();
     TurnState currentTurnState = States::getInstance()->getTurnState();
+    UIState currentUIState = States::getInstance()->getUIState();
 
-    if (currentPhase == GamePhase::CARD_PLACEMENT)
+    if (currentTurnState == TurnState::RESTART)
+    {
+        restartGame();
+        currentTurnState = States::getInstance()->getTurnState();
+    }
+    if (currentPhase == GamePhase::CARD_PLACEMENT &&
+        currentUIState == UIState::IN_GAME)
     {
         if (currentTurnState == TurnState::INIT)
         {
+            mainMenu->setAnimation(BackgroundAnimState::OPENING);
+            States::getInstance()->clearSubmenus();
             populateCardArea();
             gameArea->initCardPositions();
             States::getInstance()->progressTurnState();
@@ -92,19 +101,19 @@ void Game::delegateAccordingToGameState() {
             handleWaitForNextPlayer();
         }
     }
-    else if (currentPhase == GamePhase::VICTORY ||
-        currentPhase == GamePhase::TIED)
-    {
-        handleVictory();
-    }
+    //else if (currentPhase == GamePhase::VICTORY ||
+    //    currentPhase == GamePhase::TIED)
+    //{
+    //    handleVictory();
+    //}
 }
 
 void Game::populateCardArea() {
-    //for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
-    for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
+    for (int i = 0; i <= static_cast<int>(CardType::MARSHALL); ++i) {
+    //for (int i = 0; i <= static_cast<int>(CardType::SCOUT); ++i) {
         auto currentTypeToSpawn = static_cast<CardType>(i);
         int amountToSpawn = Card::getNrToSpawn(currentTypeToSpawn);
-        amountToSpawn = 1;
+        //amountToSpawn = 1;
         Color colorToSpawnWith = States::getInstance()->getPlayerColor();
         std::unique_ptr<Card> tempCard = nullptr;
 
@@ -178,10 +187,22 @@ void Game::renderCardArea(bool isAnimated) {
 void Game::renderInOrder()
 {
     UIState currentState = States::getInstance()->getUIState();
+    GameType currentGameType = States::getInstance()->getGameType();
+    GamePhase currentPhase = States::getInstance()->getGamePhase();
+    Color playerColor = States::getInstance()->getPlayerColor();
+    Color opponentColor = States::getInstance()->getOpponentColor();
 
     if (currentState == UIState::MENU)
     {
+        if (currentGameType == GameType::NONE)
+        {
+            display->renderSplash();
+        }
         display->renderMenu(mainMenu);
+    }
+    else if (currentState == UIState::SPLASH)
+    {
+        display->renderSplash();
     }
     else
     {
@@ -194,7 +215,20 @@ void Game::renderInOrder()
         renderGameArea(false);
         renderDiscardPile(false);
         renderAvailableMoves();
+        if (currentPhase == GamePhase::VICTORY)
+        {
+            display->renderVictory(opponentColor);
+        }
+        else if (currentPhase == GamePhase::TIED)
+        {
+            display->renderVictory();
+        }
+        if (mainMenu->isAnimated())
+        {
+            display->renderMenu(mainMenu);
+        }
     }
+
 }
 
 void Game::renderButtons() {
@@ -236,10 +270,20 @@ void Game::handlePlayerClicks() {
         GamePhase currentPhase = States::getInstance()->getGamePhase();
         UIState currentUIState = States::getInstance()->getUIState();
         SubmenuName currentSubmenu = States::getInstance()->getCurrentSubmenu();
+        SubmenuName previousSubmenu = States::getInstance()->getPreviousSubmenu();
+        GameType currentGameType = States::getInstance()->getGameType();
+
+        if (currentUIState == UIState::SPLASH && eventName.inputType == InputType::MOUSE_CLICK_DOWN)
+        {
+            if (eventName.inputType == InputType::MOUSE_CLICK_DOWN)
+            {
+                States::getInstance()->setUIState(UIState::MENU);
+            }
+        }
 
         if (currentUIState == UIState::MENU)
         {
-            if (eventName.inputType == SDL_MOUSEBUTTONUP &&
+            if (eventName.inputType == InputType::MOUSE_CLICK_RELEASE &&
                 eventName.menuItem != -1)
             {
                 if (mainMenu->getSubmenu(currentSubmenu).isBtnPressed(eventName.menuItem))
@@ -248,8 +292,21 @@ void Game::handlePlayerClicks() {
                 }
                 mainMenu->getSubmenu(currentSubmenu).clearPresses();
                 mainMenu->getSubmenu(currentSubmenu).btnAction(eventName.menuItem);
+                currentSubmenu = States::getInstance()->getCurrentSubmenu();
+                previousSubmenu = States::getInstance()->getPreviousSubmenu();
+                currentUIState = States::getInstance()->getUIState();
+                if (States::getInstance()->getTurnState() == TurnState::INIT &&
+                    currentUIState == UIState::MENU)
+                {
+                    mainMenu->getSubmenu(currentSubmenu).setX(Submenu::SCREEN_LEFT_EDGE);
+                    mainMenu->getSubmenu(currentSubmenu).setAnimState(SubmenuAnimState::LEFT_TO_CENTER);
+                    mainMenu->getSubmenu(previousSubmenu).setAnimState(SubmenuAnimState::CENTER_TO_RIGHT);
+                    States::getInstance()->setTurnState(TurnState::IN_PROGRESS);
+                }
+
+
             }
-            else if (eventName.inputType == SDL_MOUSEBUTTONDOWN &&
+            else if (eventName.inputType == InputType::MOUSE_CLICK_DOWN &&
                 eventName.menuItem != -1)
             {
                 mainMenu->getSubmenu(currentSubmenu).clearPresses();
@@ -261,21 +318,40 @@ void Game::handlePlayerClicks() {
             }
         }
 
+        if (eventName.inputType == InputType::KEY_ESCAPE)
+        {
+            if (currentUIState == UIState::IN_GAME)
+            {
+                States::getInstance()->setUIState(UIState::MENU);
+                States::getInstance()->setCurrentSubmenu(SubmenuName::MAIN_MENU);
+                currentSubmenu = States::getInstance()->getCurrentSubmenu();
+                mainMenu->getSubmenu(currentSubmenu).setX(Submenu::SCREEN_LEFT_EDGE);
+                mainMenu->getSubmenu(currentSubmenu).setAnimState(SubmenuAnimState::LEFT_TO_CENTER);
+                mainMenu->setAnimation(BackgroundAnimState::CLOSING);
+                std::cout << "current: " << static_cast<int>(currentSubmenu) << " previous: " << static_cast<int>(previousSubmenu) << std::endl;
+            }
+            else if (currentUIState == UIState::MENU && currentGameType != GameType::NONE)
+            {
+                States::getInstance()->setUIState(UIState::IN_GAME);
+                States::getInstance()->clearSubmenus();
+                mainMenu->setAnimation(BackgroundAnimState::OPENING);
+            }
+        }
+
         if (eventName.exitBtn) { States::getInstance()->setUIState(UIState::QUIT); }
         if (eventName.restartBtn) { restartGame(); }
 
-        if (currentPhase == GamePhase::CARD_PLACEMENT)
+        if (currentPhase == GamePhase::CARD_PLACEMENT && eventName.inputType == InputType::MOUSE_CLICK_DOWN)
         {
             input->evaluateInitPhaseClickEvent(eventName, gameArea, source, destination);
         }
-        else if (currentPhase == GamePhase::PLAYER_MOVE)
+        else if (currentPhase == GamePhase::PLAYER_MOVE && eventName.inputType == InputType::MOUSE_CLICK_DOWN)
         {
             if (eventName.getClickedArea() == ClickedArea::GAME_AREA) {
                 input->evaluateBattlePhaseClickEvent(eventName, gameArea, possibleMoves, source, destination, attacker, defender);
             }
         }
-        //TODO Make it so clicking anywhere progresses turn
-        else if (currentPhase == GamePhase::WAITING_FOR_PLAYER && eventName.getClickedArea() == ClickedArea::GAME_AREA)
+        else if (currentPhase == GamePhase::WAITING_FOR_PLAYER && eventName.inputType == InputType::MOUSE_CLICK_DOWN)
         {
             gameArea->clearHighlights();
             States::getInstance()->progressTurn();

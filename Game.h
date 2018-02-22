@@ -30,7 +30,7 @@ private:
     //Main Game Loop
     void delegateAccordingToGameState(); 
     void populateCardArea();    
-    void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
+    //void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
     void checkIfTied(); //Functions used in it are moved to the GameArea object.
 
     //Game state progressing functions, they also contain some other actions as well...

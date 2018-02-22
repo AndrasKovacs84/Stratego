@@ -97,22 +97,33 @@ void Display::handleEvents() {
         break;
     }
     case SDL_MOUSEBUTTONDOWN: {
-        std::cout << "down\n";
+        //std::cout << "down\n";
         SDL_GetMouseState(&mouse_x, &mouse_y);
-        processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONDOWN);
+        processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, InputType::MOUSE_CLICK_DOWN);
         eventQueue.push(processedEvent);
         mouseBtnDown = 1;
         break;
     }
     case SDL_MOUSEBUTTONUP: {
-        std::cout << "up\n";
+        //std::cout << "up\n";
         if (mouseBtnDown)
         {
             SDL_GetMouseState(&mouse_x, &mouse_y);
-            processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONUP);
+            processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, InputType::MOUSE_CLICK_RELEASE);
             eventQueue.push(processedEvent);
         }
         mouseBtnDown = 0;
+        break;
+    } 
+    case SDL_KEYDOWN: {
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_ESCAPE:
+            processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_ESCAPE);
+            eventQueue.push(processedEvent);
+        default:
+            break;
+        }
         break;
     }
     default: break;
@@ -204,6 +215,55 @@ ProcessedEvent Display::getEventFromQueue() {
 
 bool Display::isEventQueueEmpty() {
     return eventQueue.empty();
+}
+
+void Display::renderSubmenu(Submenu & submenu)
+{
+    SDL_Rect destination;
+    int x = submenu.getNextX();
+    int y = 0;
+    destination.h = 510;
+    destination.w = 500;
+    destination.x = x;
+    destination.y = 0;
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU), &destination);
+
+    size_t menuSize = submenu.getMenuSize();
+    std::string btnCaption;
+    SDL_Color white = { 255, 255, 255 };
+    for (size_t i = 0; i < menuSize; i++)
+    {
+        btnCaption = submenu.getCaption(i);
+        if (btnCaption != "")
+        {
+            std::unique_ptr<SDL_Texture, sdl_deleter> caption = text_to_texture(menuFont.get(), btnCaption, white);
+            x = submenu.getBtnX();
+            y = submenu.getBtnY(i);
+            destination.x = x;
+            destination.y = y;
+            destination.w = 270;
+            destination.h = 50;
+            if (submenu.isBtnPressed(i))
+            {
+                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN_PRESSED), &destination);
+            }
+            else
+            {
+                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN), &destination);
+            }
+            
+            int btnWidth = destination.w;
+            int btnHeight = destination.h;
+            SDL_QueryTexture(caption.get(), NULL, NULL, &destination.w, &destination.h);
+            destination.x = x + (btnWidth - destination.w) / 2;
+            destination.y = y + (btnHeight - destination.h) / 2;
+            if (submenu.isBtnPressed(i))
+            {
+                destination.y += 2; // Render the caption 2 px below normal to make the btn look pressed in
+            }
+            SDL_RenderCopy(renderer.get(), caption.get(), NULL, &destination);
+        }
+    }
 }
 
 ProcessedEvent Display::processEvent(int x, int y) {
@@ -338,52 +398,26 @@ void Display::renderMenu(const std::unique_ptr<MainMenu>& menu)
     SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BACK_BOTTOM), &destination);
 
     SubmenuName currentSubmenuName = States::getInstance()->getCurrentSubmenu();
-    Submenu& currentSubmenu = menu->getSubmenu(currentSubmenuName);
-
-    x = currentSubmenu.getNextX();
-    destination.h = 510;
-    destination.w = 500;
-    destination.x = x;
-    destination.y = 0;
-    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU), &destination);
-
-    size_t menuSize = currentSubmenu.getMenuSize();
-    std::string btnCaption;
-    SDL_Color white = { 255, 255, 255 };
-    for (size_t i = 0; i < menuSize; i++)
+    SubmenuName previousSubmenuName = States::getInstance()->getPreviousSubmenu();
+    if (previousSubmenuName != SubmenuName::NONE)
     {
-        btnCaption = currentSubmenu.getCaption(i);
-        if (btnCaption != "")
+        Submenu& previousSubmenu = menu->getSubmenu(previousSubmenuName);
+        if (previousSubmenu.isAnimated())
         {
-            std::unique_ptr<SDL_Texture, sdl_deleter> caption = text_to_texture(menuFont.get(), btnCaption, white);
-            x = currentSubmenu.getBtnX();
-            y = currentSubmenu.getBtnY(i);
-            destination.x = x;
-            destination.y = y;
-            destination.w = 270;
-            destination.h = 50;
-            if (currentSubmenu.isBtnPressed(i))
-            {
-                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN_PRESSED), &destination);
-            }
-            else
-            {
-                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN), &destination);
-            }
-            
-            int btnWidth = destination.w;
-            int btnHeight = destination.h;
-            SDL_QueryTexture(caption.get(), NULL, NULL, &destination.w, &destination.h);
-            destination.x = x + (btnWidth - destination.w) / 2;
-            destination.y = y + (btnHeight - destination.h) / 2;
-            if (currentSubmenu.isBtnPressed(i))
-            {
-                destination.y += 2; // Render the caption 2 px below normal to make the btn look pressed in
-            }
-            SDL_RenderCopy(renderer.get(), caption.get(), NULL, &destination);
+            renderSubmenu(previousSubmenu);
         }
     }
+    if (currentSubmenuName != SubmenuName::NONE)
+    {
+        Submenu& currentSubmenu = menu->getSubmenu(currentSubmenuName);
+        renderSubmenu(currentSubmenu);
+    }
 
+}
+
+void Display::renderSplash()
+{
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::SPLASH), NULL);
 }
 
 bool Display::isIsRunning() const {

@@ -43,6 +43,7 @@ public:
     void renderVictory();
     void renderAvailableMove(int x, int y);
     void renderMenu(const std::unique_ptr<MainMenu>& menu);
+    void renderSplash();
     void delay();
     Uint32 getTicks();
     ProcessedEvent getEventFromQueue();
@@ -55,6 +56,8 @@ public:
     std::unique_ptr<SDL_Texture, sdl_deleter> text_to_texture(TTF_Font* font, const std::string& text, SDL_Color color);
 
 private:
+
+    void renderSubmenu(Submenu& submenu);
 
     //Click event processing
     ProcessedEvent processEvent(int x, int y);
