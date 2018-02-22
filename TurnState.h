@@ -2,5 +2,5 @@
 
 enum class TurnState 
 {
-    INIT, IN_PROGRESS 
+    INIT, IN_PROGRESS, RESTART
 };

@@ -2,5 +2,5 @@
 
 enum class UIState 
 {
-    MENU, IN_GAME, QUIT, RESTART
+    SPLASH, MENU, IN_GAME, QUIT
 };

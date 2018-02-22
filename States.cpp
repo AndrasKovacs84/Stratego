@@ -9,8 +9,10 @@ States * States::getInstance()
 
 void States::initStates()
 {
-    uiState = UIState::MENU;
-    gameType = GameType::HOTSEAT;
+    uiState = UIState::SPLASH;
+    currentSubmenu = SubmenuName::MAIN_MENU;
+    previousSubmenu = SubmenuName::NONE;
+    gameType = GameType::NONE;
     gamePhase = GamePhase::CARD_PLACEMENT;
     playerColor = Color::BLUE;
     turnState = TurnState::INIT;
@@ -26,6 +28,16 @@ void States::restartStates()
 UIState States::getUIState()
 {
     return uiState;
+}
+
+SubmenuName States::getCurrentSubmenu()
+{
+    return currentSubmenu;
+}
+
+SubmenuName States::getPreviousSubmenu()
+{
+    return previousSubmenu;
 }
 
 GameType States::getGameType()
@@ -79,6 +91,12 @@ void States::setUIState(UIState setting)
     uiState = setting;
 }
 
+void States::setCurrentSubmenu(SubmenuName submenu)
+{
+    previousSubmenu = currentSubmenu;
+    currentSubmenu = submenu;
+}
+
 void States::setGameType(GameType gameTypeToSet)
 {
     gameType = gameTypeToSet;
@@ -92,6 +110,12 @@ void States::setGamePhase(GamePhase gamePhaseToSet)
 void States::setTurnState(TurnState newState)
 {
     turnState = newState;
+}
+
+void States::clearSubmenus()
+{
+    currentSubmenu = SubmenuName::NONE;
+    previousSubmenu = SubmenuName::NONE;
 }
 
 void States::flipPlayerColor()

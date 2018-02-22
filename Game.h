@@ -3,14 +3,15 @@
 #include <vector>
 #include "Direction.h"
 #include "Field.h"
-#include "Coordinate.h"
 #include "GameState.h"
 #include "Display.h"
 #include "Button.h"
-#include "InputParser.h"
+#include "InputHandler.h"
 #include "GameArea.h"
 #include "States.h"
+#include "MainMenu.h"
 #include "CardFactory.h"
+#include "ProcessedEvent.hpp"
 #include <memory>
 
 class Game 
@@ -29,7 +30,7 @@ private:
     //Main Game Loop
     void delegateAccordingToGameState(); 
     void populateCardArea();    
-    void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
+    //void spawnNrOfTypesOfCards(CardType typeToSpawn, int amountToSpawn, Color color);
     void checkIfTied(); //Functions used in it are moved to the GameArea object.
 
     //Game state progressing functions, they also contain some other actions as well...
@@ -54,7 +55,7 @@ private:
     void restartGame();
 
     std::vector<int> possibleMoves;
-    std::unique_ptr<InputParser> input;
+    std::unique_ptr<InputHandler> input;
     Button restart;
     Button exit;
     ProcessedEvent attacker;
@@ -63,5 +64,6 @@ private:
     ProcessedEvent destination;
     std::unique_ptr<Display> display;
     std::unique_ptr<GameArea> gameArea;
+    std::unique_ptr<MainMenu> mainMenu;
 
 };

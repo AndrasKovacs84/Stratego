@@ -1,14 +1,19 @@
+#pragma once
+
 #include "Color.h"
 #include "ClickedArea.h"
+#include "InputType.h"
 
 struct ProcessedEvent {
+    InputType inputType = InputType::NONE;
     bool restartBtn = false;
     bool exitBtn = false;
     int fieldIndex = -1;
     int sideAreaIndex = -1;
+    int menuItem = -1;
 
     bool isEmpty() {
-        return (!restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1);
+        return (inputType == InputType::NONE && !restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
     }
 
     bool isInBlueTerritory() {
@@ -36,9 +41,11 @@ struct ProcessedEvent {
     }
 
     void empty() {
+        inputType = InputType::NONE;
         restartBtn = false;
         exitBtn = false;
         fieldIndex = -1;
         sideAreaIndex = -1;
+        menuItem = -1;
     }
 };
