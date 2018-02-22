@@ -112,6 +112,7 @@
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameArea.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="InputParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -148,7 +149,9 @@
     <ClInclude Include="GamePhase.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameType.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="InputParser.h" />
+    <ClInclude Include="InteractableArea.hpp" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="ProcessedEvent.hpp" />

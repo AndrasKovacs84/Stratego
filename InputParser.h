@@ -1,15 +1,37 @@
 #pragma once
-#include <vector>
-#include "Field.h"
-#include "GameArea.h"
+
+#include "SubmenuName.h"
+#include "Submenu.h"
+#include "InteractableArea.hpp"
+#include "SDL_events.h"
+#include "ProcessedEvent.hpp"
+#include "UIState.h"
 #include "States.h"
 
-class InputParser {
+#include <map>
+#include <vector>
+
+class InputParser
+{
 public:
-    void evaluateInitPhaseClickEvent(ProcessedEvent event, std::unique_ptr<GameArea>& gameArea, ProcessedEvent &source, ProcessedEvent &destination);
-    void evaluateBattlePhaseClickEvent(ProcessedEvent event, std::unique_ptr<GameArea>& gameArea, std::vector<int> &possibleMoves, ProcessedEvent &source,
-                                      ProcessedEvent &destination, ProcessedEvent &attacker, ProcessedEvent &defender);
+    static InputParser* getInstance();
+
+    void registerMenuItem(SubmenuName submenu, size_t menuItemNr);
+    ProcessedEvent processEvent(int mouseX, int mouseY, SDL_EventType eventToProcess);
+
 private:
-    void initPhaseGameAreaClick(ProcessedEvent event, std::unique_ptr<GameArea>& gameArea, ProcessedEvent &source, ProcessedEvent &destination);
-    void initPhaseSideAreaClick(ProcessedEvent event, std::unique_ptr<GameArea>& gameArea, ProcessedEvent &source, ProcessedEvent &destination);
+    InputParser() {};
+    InputParser(InputParser const&) {};
+    InputParser& operator=(InputParser const&) {};
+    static InputParser instance;
+
+
+
+    ProcessedEvent processMenuEvent(int mouseX, int mouseY, SDL_EventType eventToProcess);
+    ProcessedEvent processInGameEvent(int x, int y, SDL_EventType input);
+    int processGameAreaClick(int x, int y);
+    int processSideAreaClick(int x, int y);
+
+    std::map<SubmenuName, std::vector<InteractableArea>> interactableAreaRegistrar;
 };
+

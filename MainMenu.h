@@ -2,6 +2,8 @@
 #include "Submenu.h"
 #include "SubmenuName.h"
 #include "States.h"
+#include "InputParser.h"
+
 #include <map>
 #include <functional>
 

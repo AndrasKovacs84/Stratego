@@ -38,12 +38,15 @@ Submenu MainMenu::initMainMenu()
 
     MenuItem newGame("New Game", []() { States::getInstance()->setCurrentSubmenu(SubmenuName::NEW_GAME); });
     mainMenu.addButton(newGame, 0);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MAIN_MENU, 0);
 
     MenuItem howTo("How to Play", []() { States::getInstance()->setCurrentSubmenu(SubmenuName::HOW_TO_PLAY); });
     mainMenu.addButton(howTo, 1);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MAIN_MENU, 1);
 
     MenuItem exit("Exit Game", []() { States::getInstance()->setCurrentSubmenu(SubmenuName::EXIT); });
     mainMenu.addButton(exit, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MAIN_MENU, 4);
 
     return mainMenu;
 }
@@ -60,6 +63,7 @@ Submenu MainMenu::initNewGameMenu()
         States::getInstance()->setUIState(UIState::IN_GAME);
     });
     newGameMenu.addButton(singlePlayer, 0);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::NEW_GAME, 0);
 
     MenuItem hotseat("Local Hotseat", []() {
         States::getInstance()->setGameType(GameType::HOTSEAT);
@@ -68,16 +72,19 @@ Submenu MainMenu::initNewGameMenu()
         States::getInstance()->setUIState(UIState::IN_GAME);
     });
     newGameMenu.addButton(hotseat, 1);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::NEW_GAME, 1);
 
     MenuItem multiMenu("Multiplayer", []() {
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTIPLAYER);
     });
     newGameMenu.addButton(multiMenu, 2);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::NEW_GAME, 2);
 
     MenuItem back("Back", []() {
         States::getInstance()->setCurrentSubmenu(SubmenuName::MAIN_MENU);
     });
     newGameMenu.addButton(back, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::NEW_GAME, 4);
 
     return newGameMenu;
 }
@@ -91,6 +98,7 @@ Submenu MainMenu::initHowToPlayMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MAIN_MENU);
     });
     howToPlay.addButton(back, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::HOW_TO_PLAY, 4);
 
     return howToPlay;
 }
@@ -103,11 +111,13 @@ Submenu MainMenu::initExitMenu()
         States::getInstance()->setUIState(UIState::QUIT);
     });
     exitMenu.addButton(confirm, 2);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::EXIT, 2);
 
     MenuItem cancel("Cancel", []() {
         States::getInstance()->setCurrentSubmenu(SubmenuName::MAIN_MENU);
     });
     exitMenu.addButton(cancel, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::EXIT, 4);
 
     return exitMenu;
 
@@ -122,17 +132,20 @@ Submenu MainMenu::initMultiplayerMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTI_HOST);
     });
     multiMenu.addButton(host, 0);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MULTIPLAYER, 0);
 
     MenuItem join("Join game", []() {
         // TODO some way to join... field to input ip?
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTI_JOIN);
     });
     multiMenu.addButton(join, 1);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MULTIPLAYER, 1);
 
     MenuItem back("Back", []() {
         States::getInstance()->setCurrentSubmenu(SubmenuName::NEW_GAME);
     });
     multiMenu.addButton(back, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MULTIPLAYER, 4);
 
     return multiMenu;
 }
@@ -145,6 +158,7 @@ Submenu MainMenu::initMultiHostMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTIPLAYER);
     });
     multiHost.addButton(back, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MULTI_HOST, 4);
 
     return multiHost;
 }
@@ -157,6 +171,7 @@ Submenu MainMenu::initMultiJoinMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTIPLAYER);
     });
     multiJoin.addButton(back, 4);
+    InputParser::getInstance()->registerMenuItem(SubmenuName::MULTI_JOIN, 4);
 
     return multiJoin;
 }

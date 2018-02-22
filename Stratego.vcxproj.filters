@@ -22,9 +22,6 @@
     <Filter Include="Game\GameArea">
       <UniqueIdentifier>{5b39cdaf-ad9b-4401-88aa-dc210d1d0fea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\InputParser">
-      <UniqueIdentifier>{ece1b14a-6d54-4bd7-9433-49282797f194}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\SDL2">
       <UniqueIdentifier>{4a6fcf16-5044-4da7-bb44-37f657a4b346}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,12 @@
     <Filter Include="Game\MenuSystem">
       <UniqueIdentifier>{4c43896e-0080-4e6a-9864-8f1c6d3937a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\InputHandler">
+      <UniqueIdentifier>{ece1b14a-6d54-4bd7-9433-49282797f194}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\SDL2\InputParser">
+      <UniqueIdentifier>{72d2f1f0-aa1b-4f74-91d4-f5095573500a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="Field.cpp">
       <Filter>Game\GameArea</Filter>
     </ClCompile>
-    <ClCompile Include="InputParser.cpp">
-      <Filter>Game\InputParser</Filter>
-    </ClCompile>
     <ClCompile Include="Assets.cpp">
       <Filter>Game\SDL2\Assets</Filter>
     </ClCompile>
@@ -86,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="MenuItem.cpp">
       <Filter>Game\MenuSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Game\InputHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="InputParser.cpp">
+      <Filter>Game\SDL2\InputParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +140,6 @@
     <ClInclude Include="Display.h">
       <Filter>Game\SDL2</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessedEvent.hpp">
-      <Filter>Game\SDL2</Filter>
-    </ClInclude>
     <ClInclude Include="GamePhase.h">
       <Filter>Game\States\enums</Filter>
     </ClInclude>
@@ -163,9 +166,6 @@
     </ClInclude>
     <ClInclude Include="Field.h">
       <Filter>Game\GameArea</Filter>
-    </ClInclude>
-    <ClInclude Include="InputParser.h">
-      <Filter>Game\InputParser</Filter>
     </ClInclude>
     <ClInclude Include="Assets.h">
       <Filter>Game\SDL2\Assets</Filter>
@@ -205,6 +205,18 @@
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Game\MenuSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Game\InputHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="InputParser.h">
+      <Filter>Game\SDL2\InputParser</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessedEvent.hpp">
+      <Filter>Game\SDL2\InputParser</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractableArea.hpp">
+      <Filter>Game\SDL2\InputParser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

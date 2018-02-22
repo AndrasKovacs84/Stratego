@@ -232,24 +232,34 @@ void Game::initButtons() {
 
 void Game::handlePlayerClicks() {
     if (!display->isEventQueueEmpty()) {
-        ProcessedEvent event = display->getEventFromQueue();
+        ProcessedEvent eventName = display->getEventFromQueue();
         GamePhase currentPhase = States::getInstance()->getGamePhase();
+        UIState currentUIState = States::getInstance()->getUIState();
+        SubmenuName currentSubmenu = States::getInstance()->getCurrentSubmenu();
 
-        if (event.exitBtn) { States::getInstance()->setUIState(UIState::QUIT); }
-        if (event.restartBtn) { restartGame(); }
+        if (currentUIState == UIState::MENU)
+        {
+            if (eventName.inputType == SDL_MOUSEBUTTONUP)
+            {
+                mainMenu->getSubmenu(currentSubmenu).btnAction(eventName.menuItem);
+            }
+        }
+
+        if (eventName.exitBtn) { States::getInstance()->setUIState(UIState::QUIT); }
+        if (eventName.restartBtn) { restartGame(); }
 
         if (currentPhase == GamePhase::CARD_PLACEMENT)
         {
-            input->evaluateInitPhaseClickEvent(event, gameArea, source, destination);
+            input->evaluateInitPhaseClickEvent(eventName, gameArea, source, destination);
         }
         else if (currentPhase == GamePhase::PLAYER_MOVE)
         {
-            if (event.getClickedArea() == ClickedArea::GAME_AREA) {
-                input->evaluateBattlePhaseClickEvent(event, gameArea, possibleMoves, source, destination, attacker, defender);
+            if (eventName.getClickedArea() == ClickedArea::GAME_AREA) {
+                input->evaluateBattlePhaseClickEvent(eventName, gameArea, possibleMoves, source, destination, attacker, defender);
             }
         }
         //TODO Make it so clicking anywhere progresses turn
-        else if (currentPhase == GamePhase::WAITING_FOR_PLAYER && event.getClickedArea() == ClickedArea::GAME_AREA)
+        else if (currentPhase == GamePhase::WAITING_FOR_PLAYER && eventName.getClickedArea() == ClickedArea::GAME_AREA)
         {
             gameArea->clearHighlights();
             States::getInstance()->progressTurn();

@@ -6,11 +6,12 @@
 #include "GameState.h"
 #include "Display.h"
 #include "Button.h"
-#include "InputParser.h"
+#include "InputHandler.h"
 #include "GameArea.h"
 #include "States.h"
 #include "MainMenu.h"
 #include "CardFactory.h"
+#include "ProcessedEvent.hpp"
 #include <memory>
 
 class Game 
@@ -54,7 +55,7 @@ private:
     void restartGame();
 
     std::vector<int> possibleMoves;
-    std::unique_ptr<InputParser> input;
+    std::unique_ptr<InputHandler> input;
     Button restart;
     Button exit;
     ProcessedEvent attacker;

@@ -1,7 +1,10 @@
+#pragma once
+
 #include "Color.h"
 #include "ClickedArea.h"
 
 struct ProcessedEvent {
+    SDL_EventType inputType = SDL_FIRSTEVENT;
     bool restartBtn = false;
     bool exitBtn = false;
     int fieldIndex = -1;
@@ -9,7 +12,7 @@ struct ProcessedEvent {
     int menuItem = -1;
 
     bool isEmpty() {
-        return (!restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
+        return (inputType == SDL_FIRSTEVENT && !restartBtn && !exitBtn && fieldIndex == -1 && sideAreaIndex == -1 && menuItem == -1);
     }
 
     bool isInBlueTerritory() {
@@ -37,6 +40,7 @@ struct ProcessedEvent {
     }
 
     void empty() {
+        inputType = SDL_FIRSTEVENT;
         restartBtn = false;
         exitBtn = false;
         fieldIndex = -1;

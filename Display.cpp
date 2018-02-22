@@ -96,10 +96,18 @@ void Display::handleEvents() {
         eventQueue.push(processedEvent);
         break;
     }
-    case SDL_MOUSEBUTTONDOWN: {
+    //case SDL_MOUSEBUTTONDOWN: {
+    //    SDL_GetMouseState(&mouse_x, &mouse_y);
+    //    //std::cout << "\nX position of mouse: " << mouse_x << "\nY position of mouse: " << mouse_y << std::endl;
+    //    //processedEvent = processEvent(mouse_x, mouse_y);
+    //    processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONDOWN);
+    //    eventQueue.push(processedEvent);
+    //}
+    case SDL_MOUSEBUTTONUP: {
         SDL_GetMouseState(&mouse_x, &mouse_y);
         //std::cout << "\nX position of mouse: " << mouse_x << "\nY position of mouse: " << mouse_y << std::endl;
-        processedEvent = processEvent(mouse_x, mouse_y);
+        //processedEvent = processEvent(mouse_x, mouse_y);
+        processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONUP);
         eventQueue.push(processedEvent);
     }
     default: break;

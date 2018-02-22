@@ -18,12 +18,13 @@ public:
     const std::string getCaption(size_t btnIdx) const;
     const size_t getMenuSize() const;
 
-private:
-
     static const size_t SCREEN_MIDDLE_X = 140; //Where the left edge of the menu needs to be so that the menu itself is completely centered on screen.
     static const size_t LEFT_OFFSET_TO_BTNS = 115;
     static const size_t TOP_OFFSET_TO_BTNS = 47;
     static const size_t OFFSET_BETWEEN_BTNS = 45;
+
+private:
+
 
     size_t _x = SCREEN_MIDDLE_X;
     size_t _y = 0;
