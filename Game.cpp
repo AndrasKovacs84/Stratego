@@ -239,9 +239,25 @@ void Game::handlePlayerClicks() {
 
         if (currentUIState == UIState::MENU)
         {
-            if (eventName.inputType == SDL_MOUSEBUTTONUP)
+            if (eventName.inputType == SDL_MOUSEBUTTONUP &&
+                eventName.menuItem != -1)
             {
+                if (mainMenu->getSubmenu(currentSubmenu).isBtnPressed(eventName.menuItem))
+                {
+                    mainMenu->getSubmenu(currentSubmenu).setBtnPress(eventName.menuItem, false);
+                }
+                mainMenu->getSubmenu(currentSubmenu).clearPresses();
                 mainMenu->getSubmenu(currentSubmenu).btnAction(eventName.menuItem);
+            }
+            else if (eventName.inputType == SDL_MOUSEBUTTONDOWN &&
+                eventName.menuItem != -1)
+            {
+                mainMenu->getSubmenu(currentSubmenu).clearPresses();
+                mainMenu->getSubmenu(currentSubmenu).setBtnPress(eventName.menuItem, true);
+            }
+            else
+            {
+                mainMenu->getSubmenu(currentSubmenu).clearPresses();
             }
         }
 

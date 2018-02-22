@@ -17,6 +17,9 @@ public:
     size_t getBtnY(size_t btnIdx);
     const std::string getCaption(size_t btnIdx) const;
     const size_t getMenuSize() const;
+    bool isBtnPressed(size_t btnIdx);
+    void setBtnPress(size_t btnIdx, bool pressed);
+    void clearPresses();
 
     static const size_t SCREEN_MIDDLE_X = 140; //Where the left edge of the menu needs to be so that the menu itself is completely centered on screen.
     static const size_t LEFT_OFFSET_TO_BTNS = 115;

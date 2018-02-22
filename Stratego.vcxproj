@@ -82,7 +82,7 @@
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>C:\VS_dev_libs\SDL2_ttf-2.0.14\lib\x86;C:\VS_dev_libs\SDL2_net-2.0.1\lib\x86;C:\VS_dev_libs\SDL2_image-2.0.2\lib\x86;C:\VS_dev_libs\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -97,7 +97,7 @@
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\VS_dev_libs\SDL2_ttf-2.0.14\lib\x86;C:\VS_dev_libs\SDL2_net-2.0.1\lib\x86;C:\VS_dev_libs\SDL2_image-2.0.2\lib\x86;C:\VS_dev_libs\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assets.h" />
+    <ClInclude Include="BackgroundAnimState.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Card.hpp" />
     <ClInclude Include="CardBomb.hpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ProcessedEvent.hpp" />
     <ClInclude Include="States.h" />
     <ClInclude Include="Submenu.h" />
+    <ClInclude Include="SubmenuAnimState.h" />
     <ClInclude Include="SubmenuName.h" />
     <ClInclude Include="Turn.h" />
     <ClInclude Include="TurnState.h" />

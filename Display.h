@@ -70,4 +70,7 @@ private:
 
     Assets assets;
 
+    SDL_EventType prevFrame;
+    size_t counter = 0;
+    bool mouseBtnDown = false;
 };

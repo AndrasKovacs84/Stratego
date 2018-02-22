@@ -49,6 +49,9 @@
     <Filter Include="Game\SDL2\InputParser">
       <UniqueIdentifier>{72d2f1f0-aa1b-4f74-91d4-f5095573500a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\MenuSystem\enums">
+      <UniqueIdentifier>{8875f236-5799-4a1e-9573-63e59019f54b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -217,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="InteractableArea.hpp">
       <Filter>Game\SDL2\InputParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundAnimState.h">
+      <Filter>Game\MenuSystem\enums</Filter>
+    </ClInclude>
+    <ClInclude Include="SubmenuAnimState.h">
+      <Filter>Game\MenuSystem\enums</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

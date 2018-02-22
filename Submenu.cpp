@@ -48,11 +48,31 @@ size_t Submenu::getBtnY(size_t btnIdx)
 
 const std::string Submenu::getCaption(size_t btnIdx) const
 {
-    // TODO: insert return statement here
     return options[btnIdx].getCaption();
 }
 
 const size_t Submenu::getMenuSize() const
 {
     return Submenu::MENU_SIZE;
+}
+
+bool Submenu::isBtnPressed(size_t btnIdx)
+{
+    return options[btnIdx].isPressed();
+}
+
+void Submenu::setBtnPress(size_t btnIdx, bool pressed)
+{
+    options[btnIdx].setPressed(pressed);
+}
+
+void Submenu::clearPresses()
+{
+    for (size_t i = 0; i < Submenu::MENU_SIZE; i++)
+    {
+        if (options[i].isPressed())
+        {
+            options[i].setPressed(false);
+        }
+    }
 }

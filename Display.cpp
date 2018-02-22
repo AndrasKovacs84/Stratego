@@ -96,19 +96,24 @@ void Display::handleEvents() {
         eventQueue.push(processedEvent);
         break;
     }
-    //case SDL_MOUSEBUTTONDOWN: {
-    //    SDL_GetMouseState(&mouse_x, &mouse_y);
-    //    //std::cout << "\nX position of mouse: " << mouse_x << "\nY position of mouse: " << mouse_y << std::endl;
-    //    //processedEvent = processEvent(mouse_x, mouse_y);
-    //    processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONDOWN);
-    //    eventQueue.push(processedEvent);
-    //}
-    case SDL_MOUSEBUTTONUP: {
+    case SDL_MOUSEBUTTONDOWN: {
+        std::cout << "down\n";
         SDL_GetMouseState(&mouse_x, &mouse_y);
-        //std::cout << "\nX position of mouse: " << mouse_x << "\nY position of mouse: " << mouse_y << std::endl;
-        //processedEvent = processEvent(mouse_x, mouse_y);
-        processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONUP);
+        processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONDOWN);
         eventQueue.push(processedEvent);
+        mouseBtnDown = 1;
+        break;
+    }
+    case SDL_MOUSEBUTTONUP: {
+        std::cout << "up\n";
+        if (mouseBtnDown)
+        {
+            SDL_GetMouseState(&mouse_x, &mouse_y);
+            processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, SDL_MOUSEBUTTONUP);
+            eventQueue.push(processedEvent);
+        }
+        mouseBtnDown = 0;
+        break;
     }
     default: break;
     }
@@ -324,10 +329,12 @@ void Display::renderMenu(const std::unique_ptr<MainMenu>& menu)
     destination.h = 260;
     destination.w = 780;
     destination.x = 0;
-    destination.y = 0;
+    y = menu->getNextY(true);
+    destination.y = y;
     SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BACK_TOP), &destination);
     destination.x = 0;
-    destination.y = 260;
+    y = menu->getNextY(false);
+    destination.y = y;
     SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BACK_BOTTOM), &destination);
 
     SubmenuName currentSubmenuName = States::getInstance()->getCurrentSubmenu();
@@ -355,13 +362,24 @@ void Display::renderMenu(const std::unique_ptr<MainMenu>& menu)
             destination.y = y;
             destination.w = 270;
             destination.h = 50;
-            SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN), &destination);
+            if (currentSubmenu.isBtnPressed(i))
+            {
+                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN_PRESSED), &destination);
+            }
+            else
+            {
+                SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_BTN), &destination);
+            }
             
             int btnWidth = destination.w;
             int btnHeight = destination.h;
             SDL_QueryTexture(caption.get(), NULL, NULL, &destination.w, &destination.h);
             destination.x = x + (btnWidth - destination.w) / 2;
             destination.y = y + (btnHeight - destination.h) / 2;
+            if (currentSubmenu.isBtnPressed(i))
+            {
+                destination.y += 2; // Render the caption 2 px below normal to make the btn look pressed in
+            }
             SDL_RenderCopy(renderer.get(), caption.get(), NULL, &destination);
         }
     }

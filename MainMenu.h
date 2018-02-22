@@ -3,6 +3,7 @@
 #include "SubmenuName.h"
 #include "States.h"
 #include "InputParser.h"
+#include "BackgroundAnimState.h"
 
 #include <map>
 #include <functional>
@@ -15,7 +16,24 @@ public:
     ~MainMenu();
 
     Submenu& getSubmenu(SubmenuName name);
+
+    int getNextY(bool top);
+
 private:
+
+    int progressTowards(int from, int targetY);
+
+    BackgroundAnimState currentTopAnimState;
+    BackgroundAnimState currentBottomAnimState;
+
+    int topCurrentY;
+    int bottomCurrentY;
+
+    static const int TOP_CLOSING_TARGET_Y = 0;
+    static const int TOP_OPENING_TARGET_Y = -260;
+    static const int BOTTOM_CLOSING_TARGET_Y = 260;
+    static const int BOTTOM_OPENING_TARGET_Y = 520;
+
 
     //Submenu init functions:
     Submenu initMainMenu();

@@ -2,9 +2,8 @@
 
 
 
-MainMenu::MainMenu()
-{
-}
+MainMenu::MainMenu() : topCurrentY(MainMenu::TOP_OPENING_TARGET_Y), bottomCurrentY(MainMenu::BOTTOM_OPENING_TARGET_Y),
+    currentTopAnimState(BackgroundAnimState::CLOSING), currentBottomAnimState(BackgroundAnimState::CLOSING) {}
 
 void MainMenu::initMenu()
 {
@@ -29,6 +28,116 @@ MainMenu::~MainMenu()
 Submenu & MainMenu::getSubmenu(SubmenuName name)
 {
     return submenus[name];
+}
+
+int MainMenu::getNextY(bool top)
+{
+    //if (currentAnimState == BackgroundAnimState::NOT_ANIMATED)
+    //{
+    //    return topCurrentY;
+    //}
+    //else if (currentAnimState == BackgroundAnimState::CLOSING)
+    //{
+    //    return getNextTopClosingY();
+    //}
+    //else if (currentAnimState == BackgroundAnimState::OPENING)
+    //{
+    //    return getNextTopOpeningY();
+    //}
+    int target = 0;
+    if (currentTopAnimState == BackgroundAnimState::NOT_ANIMATED && top) return topCurrentY; 
+    if (currentTopAnimState == BackgroundAnimState::CLOSING && top) target = MainMenu::TOP_CLOSING_TARGET_Y;
+    if (currentTopAnimState == BackgroundAnimState::OPENING && top) target = MainMenu::TOP_OPENING_TARGET_Y;
+
+    if (currentBottomAnimState == BackgroundAnimState::NOT_ANIMATED && !top) return bottomCurrentY;
+    if (currentBottomAnimState == BackgroundAnimState::CLOSING && !top) target = MainMenu::BOTTOM_CLOSING_TARGET_Y;
+    if (currentBottomAnimState == BackgroundAnimState::OPENING && !top) target = MainMenu::BOTTOM_OPENING_TARGET_Y;
+    if (top)
+    {
+        topCurrentY += progressTowards(topCurrentY, target);
+        if (topCurrentY == target) { currentTopAnimState = BackgroundAnimState::NOT_ANIMATED; }
+        std::cout << "topY: " << topCurrentY << std::endl;
+        return topCurrentY;
+    }
+    if (!top) {
+        bottomCurrentY += progressTowards(bottomCurrentY, target);
+        if (bottomCurrentY == target) { currentBottomAnimState = BackgroundAnimState::NOT_ANIMATED; }
+        std::cout << "target: " << target << " ";
+        std::cout << "bottomY: " << bottomCurrentY << std::endl;
+        return bottomCurrentY;
+    }
+}
+
+
+int MainMenu::progressTowards(int from, int targetY)
+{
+    double nextY = (targetY - from) / 2.0;
+    if (nextY < 0) { nextY = std::floor(nextY); }
+    else { nextY = std::ceil(nextY); }
+    return static_cast<int>(nextY);
+}
+
+int MainMenu::getNextTopOpeningY()
+{
+    //topCurrentY = (MainMenu::TOP_OPENING_TARGET_Y - topCurrentY) / 2;
+
+    //if (topCurrentY == MainMenu::TOP_OPENING_TARGET_Y)
+    //{
+    //    setAnimState(BackgroundAnimState::NOT_ANIMATED);
+    //}
+    //return topCurrentY;
+    return 0;
+}
+
+int MainMenu::getNextBottomOpeningY()
+{
+    //bottomCurrentY = (MainMenu::BOTTOM_OPENING_TARGET_Y - bottomCurrentY) / 2;
+    //if (bottomCurrentY == MainMenu::BOTTOM_OPENING_TARGET_Y)
+    //{
+    //    setAnimState(BackgroundAnimState::NOT_ANIMATED);
+    //}
+    //return bottomCurrentY;
+    return 0;
+}
+
+int MainMenu::getNextBottomY()
+{
+    //if (currentAnimState == BackgroundAnimState::NOT_ANIMATED)
+    //{
+    //    return bottomCurrentY;
+    //}
+    //else if (currentAnimState == BackgroundAnimState::CLOSING)
+    //{
+    //    return getNextBottomClosingY();
+    //}
+    //else if (currentAnimState == BackgroundAnimState::OPENING)
+    //{
+    //    return getNextBottomOpeningY();
+    //}
+    return 0;
+}
+
+int MainMenu::getNextTopClosingY()
+{
+    //topCurrentY += (MainMenu::TOP_CLOSING_TARGET_Y - topCurrentY) / 2 - 1;
+
+    //if (topCurrentY == MainMenu::TOP_CLOSING_TARGET_Y)
+    //{
+    //    setAnimState(BackgroundAnimState::NOT_ANIMATED);
+    //}
+    //return topCurrentY;
+    return 0;
+}
+
+int MainMenu::getNextBottomClosingY()
+{
+    //bottomCurrentY += (MainMenu::BOTTOM_CLOSING_TARGET_Y - bottomCurrentY) / 2 - 1;
+    //if (bottomCurrentY == MainMenu::BOTTOM_CLOSING_TARGET_Y)
+    //{
+    //    setAnimState(BackgroundAnimState::NOT_ANIMATED);
+    //}
+    //return bottomCurrentY;
+    return 0;
 }
 
 

@@ -12,7 +12,11 @@ public:
     void action();
     const std::string getCaption() const;
 
+    bool isPressed();
+    void setPressed(bool pressed);
+
 private:
+    bool pressed = false;
     std::string caption;
     std::function<void()> onClickAction;
 

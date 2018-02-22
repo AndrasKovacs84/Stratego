@@ -54,10 +54,10 @@ ProcessedEvent InputParser::processMenuEvent(int mouseX, int mouseY, SDL_EventTy
     {
         if (currentInteractableAreas[i].isEventValid(mouseX, mouseY, eventToProcess))
         {
-            processedEvent.inputType = eventToProcess;
             processedEvent.menuItem = currentInteractableAreas[i].getMenuItemNr();
         }
     }
+    processedEvent.inputType = eventToProcess;
     return processedEvent;
 }
 
