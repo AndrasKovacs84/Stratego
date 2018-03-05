@@ -198,6 +198,19 @@ void Game::renderInOrder()
         {
             display->renderSplash();
         }
+        else
+        {
+            renderButtons();
+            renderCardArea(true);
+            renderGameArea(true);
+            renderDiscardPile(true);
+            renderMapOverlay();
+            renderCardArea(false);
+            renderGameArea(false);
+            renderDiscardPile(false);
+            renderAvailableMoves();
+
+        }
         display->renderMenu(mainMenu);
     }
     else if (currentState == UIState::SPLASH)
