@@ -161,6 +161,20 @@ Submenu MainMenu::initHowToPlayMenu()
     howToPlay.addButton(back, 4);
     InputParser::getInstance()->registerMenuItem(SubmenuName::HOW_TO_PLAY, 4);
 
+    std::vector<std::string> message;
+    message.emplace_back("The goal of the game is to conquer the enemy player's flag.");
+    message.emplace_back("First strategically place the allotted cards from");
+    message.emplace_back("the right hand card area to the open game field.");
+    message.emplace_back("After both players have placed all their cards, they each");
+    message.emplace_back("take turns moving or attacking with their cards.");
+    message.emplace_back("Generally the higher value card defeats the lower value one.");
+    message.emplace_back("If they are equal, they are both removed.");
+    message.emplace_back("The lowest value cards have special rules applied to them:");
+    message.emplace_back("1 - Spy - Can defeat the Marshall (10).");
+    message.emplace_back("2 - Scout - Can move indefinitely in any one direction.");
+    message.emplace_back("3 - Miner - The only card that can disarm the bomb.");
+    howToPlay.setMessage(message);
+
     return howToPlay;
 }
 

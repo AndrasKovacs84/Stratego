@@ -42,7 +42,7 @@ void Game::start() {
 
         display->renderPresent();
 
-        Uint32 timestep = 16;
+        Uint32 timestep = 1000 / FPS;
         while (timePassed + timestep > display->getTicks()) {
             display->delay();
         }

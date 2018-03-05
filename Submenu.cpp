@@ -74,6 +74,16 @@ void Submenu::setBtnPress(size_t btnIdx, bool pressed)
     options[btnIdx].setPressed(pressed);
 }
 
+void Submenu::setMessage(std::vector<std::string>& message)
+{
+    messageText = message;
+}
+
+const std::vector<std::string> Submenu::getMsg()
+{
+    return messageText;
+}
+
 void Submenu::clearPresses()
 {
     for (size_t i = 0; i < Submenu::MENU_SIZE; i++)
@@ -98,6 +108,11 @@ void Submenu::setX(int x)
 bool Submenu::isAnimated()
 {
     return currentAnimState != SubmenuAnimState::NOT_ANIMATED;
+}
+
+bool Submenu::hasMessage()
+{
+    return messageText.size() > 0;
 }
 
 int Submenu::progressTowards(int from, int target)

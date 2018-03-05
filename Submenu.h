@@ -20,10 +20,16 @@ public:
     const size_t getMenuSize() const;
     bool isBtnPressed(size_t btnIdx);
     void setBtnPress(size_t btnIdx, bool pressed);
+    void setMessage(std::vector<std::string>& message);
+    const std::vector<std::string> getMsg();
     void clearPresses();
     void setAnimState(SubmenuAnimState nextState);
     void setX(int x);
+
     bool isAnimated();
+    bool hasMessage();
+
+
 
     static const int SCREEN_MIDDLE_X = 140; //Where the left edge of the menu needs to be so that the menu itself is completely centered on screen.
     static const int SCREEN_RIGHT_EDGE = 780;
@@ -35,6 +41,7 @@ public:
 
 private:
 
+    std::vector<std::string> messageText;
     int progressTowards(int from, int target);
 
     SubmenuAnimState currentAnimState;

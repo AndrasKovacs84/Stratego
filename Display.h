@@ -43,6 +43,7 @@ public:
     void renderVictory();
     void renderAvailableMove(int x, int y);
     void renderMenu(const std::unique_ptr<MainMenu>& menu);
+    void renderMessage(const std::vector<std::string>& message, int x);
     void renderSplash();
     void delay();
     Uint32 getTicks();
@@ -52,10 +53,13 @@ public:
     std::unique_ptr<SDL_Window, sdl_deleter> create_window(char const *title, int x, int y, int w, int h, Uint32 flags);
     std::unique_ptr<SDL_Renderer, sdl_deleter> create_renderer(SDL_Window* window, int index, Uint32 flags);
     std::unique_ptr<SDL_Texture, sdl_deleter> load_texture(const std::string& filename);
-    std::unique_ptr<TTF_Font, sdl_deleter> load_font(const std::string& filename);
+    std::unique_ptr<TTF_Font, sdl_deleter> load_font(const std::string& filename, size_t fontSize);
     std::unique_ptr<SDL_Texture, sdl_deleter> text_to_texture(TTF_Font* font, const std::string& text, SDL_Color color);
 
 private:
+
+    static const size_t MENU_FONT_SIZE = 42;
+    static const size_t TEXT_FONT_SIZE = 30;
 
     void renderSubmenu(Submenu& submenu);
 
@@ -70,9 +74,13 @@ private:
     std::unique_ptr<SDL_Texture, sdl_deleter> textureAtlas;
     std::unique_ptr<SDL_Window, sdl_deleter> window;
     std::unique_ptr<TTF_Font, sdl_deleter> menuFont;
+    std::unique_ptr<TTF_Font, sdl_deleter> textFont;
 
     Assets assets;
 
+
+    SDL_Color white = { 255, 255, 255 };
+    SDL_Color black = { 0, 0, 0 };
     SDL_EventType prevFrame;
     size_t counter = 0;
     bool mouseBtnDown = false;
