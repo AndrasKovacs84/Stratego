@@ -97,7 +97,6 @@ void Display::handleEvents() {
         break;
     }
     case SDL_MOUSEBUTTONDOWN: {
-        //std::cout << "down\n";
         SDL_GetMouseState(&mouse_x, &mouse_y);
         processedEvent = InputParser::getInstance()->processEvent(mouse_x, mouse_y, InputType::MOUSE_CLICK_DOWN);
         eventQueue.push(processedEvent);
@@ -105,7 +104,6 @@ void Display::handleEvents() {
         break;
     }
     case SDL_MOUSEBUTTONUP: {
-        //std::cout << "up\n";
         if (mouseBtnDown)
         {
             SDL_GetMouseState(&mouse_x, &mouse_y);
@@ -116,15 +114,8 @@ void Display::handleEvents() {
         break;
     } 
     case SDL_KEYDOWN: {
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_ESCAPE:
-            processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_ESCAPE);
-            eventQueue.push(processedEvent);
-        default:
-            break;
-        }
-        break;
+        processedEvent = InputParser::getInstance()->processKeyEvent(event);
+        eventQueue.push(processedEvent);
     }
     default: break;
     }
@@ -264,38 +255,6 @@ void Display::renderSubmenu(Submenu & submenu)
             SDL_RenderCopy(renderer.get(), caption.get(), NULL, &destination);
         }
     }
-}
-
-ProcessedEvent Display::processEvent(int x, int y) {
-    ProcessedEvent processedEvent;
-    //Weed out out of bounds clicks
-    if (x < 10 || x>770 || y < 10 || y > 510) { return processedEvent; }
-
-    if (x > 550 && x < 630 && y>65 && y < 95) {
-        processedEvent.exitBtn = true;
-    }
-    if (x > 660 && x < 740 && y>65 && y < 95) {
-        processedEvent.restartBtn = true;
-    }
-    if (x > 10 && x < 510 && y>10 && y < 510) {
-        processedEvent.fieldIndex = processGameAreaClick(x, y);
-    }
-    if (x > 520 && x < 770 & y>110 && y < 510) {
-        processedEvent.sideAreaIndex = processSideAreaClick(x, y);
-    }
-    return processedEvent;
-}
-
-int Display::processGameAreaClick(int x, int y) {
-    int fieldIndex;
-    fieldIndex = (((y - 10) / 50) * 10) + ((x - 10) / 50);
-    return fieldIndex;
-}
-
-int Display::processSideAreaClick(int x, int y) {
-    int sideIndex;
-    sideIndex = (((y - 110) / 50) * 5) + ((x - 520) / 50);
-    return sideIndex;
 }
 
 void Display::renderMapOverlay(Color color) {

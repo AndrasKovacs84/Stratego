@@ -44,6 +44,98 @@ ProcessedEvent InputParser::processEvent(int mouseX, int mouseY, InputType event
     return processedEvent;
 }
 
+ProcessedEvent InputParser::processKeyEvent(SDL_Event event)
+{
+    ProcessedEvent processedEvent;
+    switch (event.key.keysym.sym)
+    {
+    case SDLK_ESCAPE:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_ESCAPE);
+        break;
+
+    case SDLK_PERIOD:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_PERIOD);
+        break;
+    case SDLK_KP_PERIOD:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_PERIOD);
+        break;
+
+    case SDLK_0:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_0);
+        break;
+    case SDLK_KP_0:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_0);
+        break;
+
+    case SDLK_1:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_1);
+        break;
+    case SDLK_KP_1:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_1);
+        break;
+
+    case SDLK_2:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_2);
+        break;
+    case SDLK_KP_2:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_2);
+        break;
+
+    case SDLK_3:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_3);
+        break;
+    case SDLK_KP_3:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_3);
+        break;
+
+    case SDLK_4:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_4);
+        break;
+    case SDLK_KP_4:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_4);
+        break;
+
+    case SDLK_5:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_5);
+        break;
+    case SDLK_KP_5:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_5);
+        break;
+
+    case SDLK_6:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_6);
+        break;
+    case SDLK_KP_6:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_6);
+        break;
+
+    case SDLK_7:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_7);
+        break;
+    case SDLK_KP_7:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_7);
+        break;
+
+    case SDLK_8:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_8);
+        break;
+    case SDLK_KP_8:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_8);
+        break;
+
+    case SDLK_9:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_9);
+        break;
+    case SDLK_KP_9:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_9);
+        break;
+
+    default:
+        break;
+    }
+    return processedEvent;
+}
+
 ProcessedEvent InputParser::processMenuEvent(int mouseX, int mouseY, InputType eventToProcess)
 {
     ProcessedEvent processedEvent;

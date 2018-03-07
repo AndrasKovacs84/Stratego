@@ -19,6 +19,7 @@ public:
 
     void registerMenuItem(SubmenuName submenu, size_t menuItemNr);
     ProcessedEvent processEvent(int mouseX, int mouseY, InputType eventToProcess);
+    ProcessedEvent processKeyEvent(SDL_Event event);
 
 private:
     InputParser() {};

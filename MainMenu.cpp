@@ -115,10 +115,11 @@ Submenu MainMenu::initNewGameMenu()
     Submenu newGameMenu;
 
     MenuItem singlePlayer("Single player", []() {
-        States::getInstance()->setGameType(GameType::SINGLE_PLAYER);
-        States::getInstance()->setGamePhase(GamePhase::CARD_PLACEMENT);
-        States::getInstance()->setTurnState(TurnState::RESTART); // clears potentially ongoing game
-        States::getInstance()->setUIState(UIState::IN_GAME);
+        // disabled, since game mode is not implemented
+        //States::getInstance()->setGameType(GameType::SINGLE_PLAYER);
+        //States::getInstance()->setGamePhase(GamePhase::CARD_PLACEMENT);
+        //States::getInstance()->setTurnState(TurnState::RESTART); // clears potentially ongoing game
+        //States::getInstance()->setUIState(UIState::IN_GAME);
     });
     newGameMenu.addButton(singlePlayer, 0);
     InputParser::getInstance()->registerMenuItem(SubmenuName::NEW_GAME, 0);
