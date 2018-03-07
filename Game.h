@@ -24,6 +24,8 @@ public:
 
 private:
 
+    static const size_t FPS = 60;
+
     //Game init
     void initButtons(); 
 

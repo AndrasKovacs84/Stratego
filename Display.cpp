@@ -2,7 +2,6 @@
 #include <iostream>
 #include <SDL_image.h>
 #include "Display.h"
-//#include <Game.h>
 
 
 void Display::init(const char *title, int xpos, int ypos, int width, int height, bool fullscreen)
@@ -39,12 +38,16 @@ void Display::init(const char *title, int xpos, int ypos, int width, int height,
             printf("TTF_Init: %s\n", TTF_GetError());
             exit(2);
         }
-        menuFont = load_font("assets/Sketch_Gothic_School.ttf");
+        menuFont = load_font("assets/Sketch_Gothic_School.ttf", MENU_FONT_SIZE);
         if (!menuFont)
         {
             std::cout << "couldn't load font " << TTF_GetError() << std::endl;
         }
-
+        textFont = load_font("assets/GreatVibes-Regular.ttf", TEXT_FONT_SIZE);
+        if (!textFont)
+        {
+            std::cout << "couldn't load font " << TTF_GetError() << std::endl;
+        }
     }
     else {
         isRunning = false;
@@ -69,10 +72,10 @@ std::unique_ptr<SDL_Texture, sdl_deleter> Display::load_texture(const std::strin
         sdl_deleter());
 }
 
-std::unique_ptr<TTF_Font, sdl_deleter> Display::load_font(const std::string & filename)
+std::unique_ptr<TTF_Font, sdl_deleter> Display::load_font(const std::string & filename, size_t fontSize)
 {
     return std::unique_ptr<TTF_Font, sdl_deleter>(
-        TTF_OpenFont(filename.c_str(), 42),
+        TTF_OpenFont(filename.c_str(), fontSize),
         sdl_deleter());
 }
 
@@ -156,7 +159,9 @@ void Display::renderField(int x, int y, bool highlighted) {
 
 void Display::renderPresent() {
     SDL_RenderPresent(renderer.get());
-} void Display::renderField(int x, int y, bool highlighted, Color cardColor, CardType faceUpCard, int cardX, int cardY, int cardW) {
+} 
+
+void Display::renderField(int x, int y, bool highlighted, Color cardColor, CardType faceUpCard, int cardX, int cardY, int cardW) {
     if (cardW > 50) cardW = 50; SDL_Rect destination; destination.h = 50; destination.w = cardW; destination.x = cardX + (25 - cardW / 2); destination.y = cardY;
     SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getTexturePosition(faceUpCard, cardColor), &destination);
     if (highlighted) {
@@ -221,7 +226,11 @@ void Display::renderSubmenu(Submenu & submenu)
 
     size_t menuSize = submenu.getMenuSize();
     std::string btnCaption;
-    SDL_Color white = { 255, 255, 255 };
+    if (submenu.hasMessage())
+    {
+        std::vector<std::string> msg = submenu.getMsg();
+        renderMessage(msg, x);
+    }
     for (size_t i = 0; i < menuSize; i++)
     {
         btnCaption = submenu.getCaption(i);
@@ -372,6 +381,31 @@ void Display::renderMenu(const std::unique_ptr<MainMenu>& menu)
         renderSubmenu(currentSubmenu);
     }
 
+}
+
+void Display::renderMessage(const std::vector<std::string>& message, int x)
+{
+    SDL_Rect destination;
+    destination.x = x - 40;
+    destination.y = 10;
+    destination.w = 580;
+    destination.h = 400;
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MAP_OVERLAY_BOTTOM_SHROUDED), &destination);
+    destination.x = x - 20; //TODO placeholder
+    destination.y = -20; //TODO placeholder
+    //TODO render top texture
+    //TODO render background texture for line of text
+
+    size_t length = message.size();
+    for (size_t i = 0; i < length; i++)
+    {
+        destination.y += 35; // TODO placeholder
+        std::unique_ptr<SDL_Texture, sdl_deleter> lineOfMessage = text_to_texture(textFont.get(), message[i], black);
+        SDL_QueryTexture(lineOfMessage.get(), NULL, NULL, &destination.w, &destination.h);
+        SDL_RenderCopy(renderer.get(), lineOfMessage.get(), NULL, &destination);
+    }
+
+    //TODO render bottom texture
 }
 
 void Display::renderSplash()
