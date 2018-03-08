@@ -140,8 +140,8 @@ void Display::clean() {
     SDL_DestroyTexture(textureAtlas.get());
     SDL_DestroyRenderer(renderer.get());
     SDL_DestroyWindow(window.get());
-    IMG_Quit();
-    SDL_Quit();
+    //IMG_Quit();
+    //SDL_Quit();
     std::cout << "Cleaned up after Display class..." << std::endl;
 }
 
@@ -390,22 +390,17 @@ void Display::renderMessage(const std::vector<std::string>& message, int x)
     destination.y = 10;
     destination.w = 580;
     destination.h = 400;
-    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MAP_OVERLAY_BOTTOM_SHROUDED), &destination);
-    destination.x = x - 20; //TODO placeholder
-    destination.y = -20; //TODO placeholder
-    //TODO render top texture
-    //TODO render background texture for line of text
+    SDL_RenderCopy(renderer.get(), textureAtlas.get(), assets.getUIElement(UIElement::MENU_MSG_BACKGROUND), &destination);
+    destination.x = x; 
 
     size_t length = message.size();
     for (size_t i = 0; i < length; i++)
     {
-        destination.y += 35; // TODO placeholder
+        destination.y += TEXT_LINE_SPACING; 
         std::unique_ptr<SDL_Texture, sdl_deleter> lineOfMessage = text_to_texture(textFont.get(), message[i], black);
         SDL_QueryTexture(lineOfMessage.get(), NULL, NULL, &destination.w, &destination.h);
         SDL_RenderCopy(renderer.get(), lineOfMessage.get(), NULL, &destination);
     }
-
-    //TODO render bottom texture
 }
 
 void Display::renderSplash()
@@ -424,7 +419,3 @@ void Display::delay() {
 Uint32 Display::getTicks() {
     return SDL_GetTicks();
 }
-
-
-
-

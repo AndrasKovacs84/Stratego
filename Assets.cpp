@@ -160,6 +160,12 @@ Assets::Assets() {
     tempRect.x = 0;
     tempRect.y = 1700;
     UIElements[UIElement::SPLASH] = tempRect;
+
+    tempRect.h = 400;
+    tempRect.w = 580;
+    tempRect.x = 0;
+    tempRect.y = 2220;
+    UIElements[UIElement::MENU_MSG_BACKGROUND] = tempRect;
 }
 
 

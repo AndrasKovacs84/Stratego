@@ -59,14 +59,11 @@ public:
 private:
 
     static const size_t MENU_FONT_SIZE = 42;
-    static const size_t TEXT_FONT_SIZE = 30;
+    static const size_t TEXT_FONT_SIZE = 25;
+    static const size_t TEXT_LINE_SPACING = 30;
 
     void renderSubmenu(Submenu& submenu);
 
-    //Click event processing
-    ProcessedEvent processEvent(int x, int y);
-    int processGameAreaClick(int x, int y);
-    int processSideAreaClick(int x, int y);
     std::queue<ProcessedEvent> eventQueue;
 
     bool isRunning;
