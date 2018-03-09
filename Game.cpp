@@ -329,6 +329,18 @@ void Game::handlePlayerClicks() {
             {
                 mainMenu->getSubmenu(currentSubmenu).clearPresses();
             }
+            if (currentSubmenu == SubmenuName::MULTI_JOIN)
+            {
+                if (eventName.inputType == InputType::KEY_BACKSPACE)
+                {
+                    mainMenu->getSubmenu(currentSubmenu).removeLastCharacter();
+                }
+                else if (input->validKeyInput(eventName))
+                {
+                    char inputChar = input->keyInputHandler(eventName);
+                    mainMenu->getSubmenu(currentSubmenu).enterCharacter(inputChar);
+                }
+            }
         }
 
         if (eventName.inputType == InputType::KEY_ESCAPE)

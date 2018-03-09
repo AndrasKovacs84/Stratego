@@ -129,6 +129,9 @@ ProcessedEvent InputParser::processKeyEvent(SDL_Event event)
     case SDLK_KP_9:
         processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_9);
         break;
+    case SDLK_BACKSPACE:
+        processedEvent = InputParser::getInstance()->processEvent(-1, -1, InputType::KEY_BACKSPACE);
+        break;
 
     default:
         break;

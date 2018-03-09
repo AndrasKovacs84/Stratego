@@ -26,6 +26,10 @@ public:
     void setAnimState(SubmenuAnimState nextState);
     void setX(int x);
 
+    std::string getInputField() const;
+    void enterCharacter(char input);
+    void removeLastCharacter();
+
     bool isAnimated();
     bool hasMessage();
 
@@ -42,6 +46,7 @@ public:
 private:
 
     std::vector<std::string> messageText;
+    std::string inputField;
     int progressTowards(int from, int target);
 
     SubmenuAnimState currentAnimState;

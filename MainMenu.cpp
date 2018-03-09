@@ -239,6 +239,13 @@ Submenu MainMenu::initMultiHostMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTIPLAYER);
         States::getInstance()->setTurnState(TurnState::INIT);
     });
+
+    std::vector<std::string> message;
+    message.emplace_back("Hosting game on the following address:");
+    message.emplace_back("");
+    message.emplace_back("Enemy player can join through this.");
+    multiHost.setMessage(message);
+
     multiHost.addButton(back, 4);
     InputParser::getInstance()->registerMenuItem(SubmenuName::MULTI_HOST, 4);
 
@@ -253,6 +260,11 @@ Submenu MainMenu::initMultiJoinMenu()
         States::getInstance()->setCurrentSubmenu(SubmenuName::MULTIPLAYER);
         States::getInstance()->setTurnState(TurnState::INIT);
     });
+
+    std::vector<std::string> message;
+    message.emplace_back("Please enter ip address to join: ");
+    multiJoin.setMessage(message);
+
     multiJoin.addButton(back, 4);
     InputParser::getInstance()->registerMenuItem(SubmenuName::MULTI_JOIN, 4);
 

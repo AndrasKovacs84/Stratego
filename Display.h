@@ -43,7 +43,6 @@ public:
     void renderVictory();
     void renderAvailableMove(int x, int y);
     void renderMenu(const std::unique_ptr<MainMenu>& menu);
-    void renderMessage(const std::vector<std::string>& message, int x);
     void renderSplash();
     void delay();
     Uint32 getTicks();
@@ -61,8 +60,11 @@ private:
     static const size_t MENU_FONT_SIZE = 42;
     static const size_t TEXT_FONT_SIZE = 25;
     static const size_t TEXT_LINE_SPACING = 30;
+    static const size_t INPUT_FIELD_Y_OFFSET = 100;
 
     void renderSubmenu(Submenu& submenu);
+    void renderMessage(const std::vector<std::string>& message, int x);
+    void renderInputField(const std::string& inputField, int x);
 
     std::queue<ProcessedEvent> eventQueue;
 

@@ -105,6 +105,24 @@ void Submenu::setX(int x)
     _x = x;
 }
 
+std::string Submenu::getInputField() const
+{
+    return inputField;
+}
+
+void Submenu::enterCharacter(char input)
+{
+    inputField += input;
+}
+
+void Submenu::removeLastCharacter()
+{
+    if (inputField.size() > 0)
+    {
+        inputField.pop_back();
+    }
+}
+
 bool Submenu::isAnimated()
 {
     return currentAnimState != SubmenuAnimState::NOT_ANIMATED;

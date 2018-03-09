@@ -140,8 +140,8 @@ void Display::clean() {
     SDL_DestroyTexture(textureAtlas.get());
     SDL_DestroyRenderer(renderer.get());
     SDL_DestroyWindow(window.get());
-    //IMG_Quit();
-    //SDL_Quit();
+    IMG_Quit();
+    SDL_Quit();
     std::cout << "Cleaned up after Display class..." << std::endl;
 }
 
@@ -230,6 +230,11 @@ void Display::renderSubmenu(Submenu & submenu)
     {
         std::vector<std::string> msg = submenu.getMsg();
         renderMessage(msg, x);
+    }
+    std::string inputField = submenu.getInputField();
+    if (!inputField.empty())
+    {
+        renderInputField(submenu.getInputField(), x);
     }
     for (size_t i = 0; i < menuSize; i++)
     {
@@ -401,6 +406,16 @@ void Display::renderMessage(const std::vector<std::string>& message, int x)
         SDL_QueryTexture(lineOfMessage.get(), NULL, NULL, &destination.w, &destination.h);
         SDL_RenderCopy(renderer.get(), lineOfMessage.get(), NULL, &destination);
     }
+}
+
+void Display::renderInputField(const std::string & inputField, int x)
+{
+    SDL_Rect destination;
+    destination.x = x;
+    destination.y = 10 + TEXT_LINE_SPACING * 2;
+    std::unique_ptr<SDL_Texture, sdl_deleter> lineOfMessage = text_to_texture(textFont.get(), inputField, black);
+    SDL_QueryTexture(lineOfMessage.get(), NULL, NULL, &destination.w, &destination.h);
+    SDL_RenderCopy(renderer.get(), lineOfMessage.get(), NULL, &destination);
 }
 
 void Display::renderSplash()
